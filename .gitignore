@@ -1,0 +1,6 @@
+/.vs
+/bin
+/obj
+/vcpkg
+/darknet
+/tools/vswhere.exe
