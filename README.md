@@ -4,7 +4,7 @@ Compile and run [https://github.com/AlexeyAB/darknet](https://github.com/AlexeyA
 
 ## Steps to follow
 
-1. Make sure you have Visual Studio 2019 or newer installed. Community edition, Professional, all will work.
+1. Make sure you have Visual Studio 2019 or newer installed. Community edition, Professional, all will work. Make sure you have installed the C++ and C# workloads with it.
 2. Make sure you have git installed: [https://git-scm.com/download/win](https://git-scm.com/download/win).
 3. Make sure you have Powershell or Pwsh installed. Powershell is already part of Windows 10 or newer. So most users wont need this step. You can download it here: [https://github.com/PowerShell/PowerShell](https://github.com/PowerShell/PowerShell)
 4. Check out this repository
