@@ -2,6 +2,11 @@ $ErrorActionPreference = "Stop"
 
 Push-Location (Split-Path -Path $MyInvocation.MyCommand.Definition -Parent)
 
+if (!(Get-Command "git.exe" -ErrorAction Ignore)) {
+	Write-Error "Git.exe not found. Make sure you have git installed!"
+	exit
+}
+
 if (!(Test-Path ".\vcpkg\bootstrap-vcpkg.bat")) {
 	& "git.exe" clone https://github.com/microsoft/vcpkg.git .\vcpkg
 }
