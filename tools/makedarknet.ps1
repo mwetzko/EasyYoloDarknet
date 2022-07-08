@@ -38,7 +38,7 @@ try {
 	Push-Location $path
 
 	try {
-		& "cl.exe" /Gd /EHsc /DWIN32 /Fedarknet /I $vcpkginc /I $inc /LD $codefiles $libs
+		& "cl.exe" /Gd /EHsc /DWIN32 /DOPENCV /Fedarknet /I $vcpkginc /I $inc /LD $codefiles $libs
 
 		if (!$?) {
 			throw "Compiling darknet $($arch) failed."
