@@ -13,4 +13,4 @@ Compile and run [https://github.com/AlexeyAB/darknet](https://github.com/AlexeyA
 ## Important
 
 + Make sure you have an internet connection while running `bootstrap.ps1`. It will download all necessary tools to compile `darknet.dll`.
-+ The compiled `darknet.dll` does not need any Microsoft Visual C++ Redistributable package.
++ The compiled `darknet.dll` does require Microsoft Visual C++ Redistributable package. [https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)

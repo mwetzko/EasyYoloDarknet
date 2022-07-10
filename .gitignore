@@ -1,6 +1,14 @@
 /.vs
 /bin
 /obj
+/data
 /vcpkg
 /darknet
+/tools/GitHubExport.ps1
+/tools/EnumDependencies
+/tools/envvars.ps1
+/tools/vcdevenv.ps1
 /tools/vswhere.exe
+/src/Detect/.vs
+/src/Detect/Detect/bin
+/src/Detect/Detect/obj
