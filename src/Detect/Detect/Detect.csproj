@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net6.0-windows</TargetFramework>
+		<UseWindowsForms>true</UseWindowsForms>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<OutDir>..\..\..\bin</OutDir>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Folder Include="Yolo\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\..\..\darknet\cfg\yolov4.cfg" Link="Yolo\yolov4.cfg">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="..\..\..\darknet\data\coco.names" Link="Yolo\coco.names">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Include="..\..\..\data\yolov4.weights" Link="Yolo\yolov4.weights">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>
