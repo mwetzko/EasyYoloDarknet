@@ -9,8 +9,9 @@ Compile and run [https://github.com/AlexeyAB/darknet](https://github.com/AlexeyA
 3. Make sure you have Powershell or Pwsh installed. Powershell is already part of Windows 10 or newer. So most users wont need this step. You can download it here: [https://github.com/PowerShell/PowerShell](https://github.com/PowerShell/PowerShell)
 4. Check out this repository
 5. Run `bootstrap.ps1`. This will compile `darknet.dll` in both x86 and x64 under \bin\x86\ and \bin\x64\
+5. Open `src\Detect\Detect.sln` with Visual Studio and run. You will be ask to choose an image to detect objects on. Try a picture with people or cars on it. The current version of this project builds `darknet.dll` without GPU support, so detection might take minutes.
 
 ## Important
 
 + Make sure you have an internet connection while running `bootstrap.ps1`. It will download all necessary tools to compile `darknet.dll`.
-+ The compiled `darknet.dll` does require Microsoft Visual C++ Redistributable package. [https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
++ The compiled `darknet.dll` does require Microsoft Visual C++ Redistributable package. It is installed with Visual Studio by default. You can download it here: [https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170) 
