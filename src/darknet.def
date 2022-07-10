@@ -1,0 +1,7 @@
+LIBRARY
+
+EXPORTS
+    init
+    detect_image
+    detect_mat
+    dispose
