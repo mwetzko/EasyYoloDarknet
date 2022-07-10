@@ -36,7 +36,7 @@ function My-Do-Dependencies {
 					Copy-Item -Path $vcpkgdep $item
 
 					$subs = & ".\EnumDependencies\EnumDependencies\bin\EnumDependencies.exe" $item
-								
+					
 					My-Do-Dependencies -deps $subs -libs $libs -vcpkgbin $vcpkgbin -dll $dll
 				}
 			}
@@ -87,7 +87,7 @@ try {
 			throw "Compiling darknet $($arch) failed."
 		}
 	}
-	finally {   
+	finally {
 		Pop-Location
 	}
 
