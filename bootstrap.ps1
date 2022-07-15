@@ -1,3 +1,10 @@
+param(
+	[Parameter(Mandatory = $false)]
+	[switch] $cuda,
+	[Parameter(Mandatory = $false)]
+	[switch] $cudnn
+)
+
 $ErrorActionPreference = "Stop"
 $InformationPreference = "Continue"
 
@@ -78,4 +85,4 @@ if (!(Test-Path ".\tools\EnumDependencies\EnumDependencies\bin\EnumDependencies.
 	& "dotnet.exe" publish ".\tools\EnumDependencies\EnumDependencies\EnumDependencies.csproj" -o $output.FullName
 }
 
-@("x86", "x64") | ForEach-Object { & ".\tools\makedarknet.ps1" $_ }
+@("x86", "x64") | ForEach-Object { & ".\tools\makedarknet.ps1" $_ $cuda $cudnn }
