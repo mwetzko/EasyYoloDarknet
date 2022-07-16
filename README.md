@@ -10,7 +10,7 @@ Compile and run [https://github.com/AlexeyAB/darknet](https://github.com/AlexeyA
 4. Check out this repository
 5. Run `bootstrap.ps1`. This will compile `darknet.dll` in both x86 and x64 under \bin\x86\ and \bin\x64\
 5.1 If you want to use CUDA/CUDNN, run `bootstrap.ps1 -cuda [-cudnn]`. This will compile the x64 version of darknet with CUDA. x86 is not supported and will fallback to the version as if it was not compiled with the -cuda flag
-5.2 If you compile with -cuda (optionally with -cudnn) please follow the install instructions for CUDA/CUDNN below
+5.2 If you compile with -cuda (optionally with -cudnn) please follow the install instructions for CUDA/CUDNN below.
 6. Open `src\Detect\Detect.sln` with Visual Studio and run. You will be ask to choose an image to detect objects on. Try a picture with people or cars on it. The current version of this project builds `darknet.dll` without GPU support, so detection might take minutes.
 
 ## Important
