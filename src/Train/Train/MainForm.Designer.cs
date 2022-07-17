@@ -90,13 +90,13 @@ namespace Train
             this.lbProjectName.Location = new System.Drawing.Point(10, 10);
             this.lbProjectName.Margin = new System.Windows.Forms.Padding(5);
             this.lbProjectName.Name = "lbProjectName";
-            this.lbProjectName.Size = new System.Drawing.Size(164, 15);
+            this.lbProjectName.Size = new System.Drawing.Size(23, 15);
             this.lbProjectName.TabIndex = 0;
-            this.lbProjectName.Text = "<Open project or create one>";
+            this.lbProjectName.Text = "<>";
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(184, 6);
+            this.btnSave.Location = new System.Drawing.Point(43, 6);
             this.btnSave.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
@@ -107,18 +107,19 @@ namespace Train
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(269, 6);
+            this.btnClose.Location = new System.Drawing.Point(128, 6);
             this.btnClose.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 5;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // pnlDiffer
             // 
             this.pnlDiffer.BackColor = System.Drawing.Color.Gray;
-            this.pnlDiffer.Location = new System.Drawing.Point(354, 6);
+            this.pnlDiffer.Location = new System.Drawing.Point(213, 6);
             this.pnlDiffer.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.pnlDiffer.Name = "pnlDiffer";
             this.pnlDiffer.Size = new System.Drawing.Size(1, 23);
@@ -126,7 +127,7 @@ namespace Train
             // 
             // btnProjectOpen
             // 
-            this.btnProjectOpen.Location = new System.Drawing.Point(365, 6);
+            this.btnProjectOpen.Location = new System.Drawing.Point(224, 6);
             this.btnProjectOpen.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnProjectOpen.Name = "btnProjectOpen";
             this.btnProjectOpen.Size = new System.Drawing.Size(75, 23);
@@ -137,7 +138,7 @@ namespace Train
             // 
             // btnProjectCreate
             // 
-            this.btnProjectCreate.Location = new System.Drawing.Point(450, 6);
+            this.btnProjectCreate.Location = new System.Drawing.Point(309, 6);
             this.btnProjectCreate.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnProjectCreate.Name = "btnProjectCreate";
             this.btnProjectCreate.Size = new System.Drawing.Size(75, 23);

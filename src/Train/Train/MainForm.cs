@@ -20,6 +20,8 @@ namespace Train
         {
             InitializeComponent();
 
+            EnsureDefaultProjectNameText();
+
             btnSave.Visible = false;
             btnClose.Visible = false;
             pnlDiffer.Visible = false;
@@ -40,6 +42,11 @@ namespace Train
             {
                 this.Text = $"{FORM_NAME} | {mCurrentProjectFile}";
             }
+        }
+
+        void EnsureDefaultProjectNameText()
+        {
+            lbProjectName.Text = "<Open project or create one>";
         }
 
         void EnsureLoadedProject(string filename)
@@ -75,10 +82,35 @@ namespace Train
             pnlDiffer.Visible = true;
             pnlImages.Visible = true;
             pnlClasses.Visible = true;
+
+            txtNewClass.Text = string.Empty;
+        }
+
+        void EnsureClosedProject()
+        {
+            mCurrentProjectFile = null;
+
+            EnsureDefaultProjectNameText();
+
+            mCurrentProject = null;
+
+            pnlImagesList.Controls.Clear();
+            pnlClassesList.Controls.Clear();
+
+            btnSave.Visible = false;
+            btnClose.Visible = false;
+            pnlDiffer.Visible = false;
+            pnlImages.Visible = false;
+            pnlClasses.Visible = false;
         }
 
         void btnProjectOpen_Click(object sender, EventArgs e)
         {
+            if (!CloseProject())
+            {
+                return;
+            }
+
             using (var openFileDialog = new OpenFileDialog())
             {
                 openFileDialog.Title = "Open project...";
@@ -97,6 +129,11 @@ namespace Train
 
         void btnProjectCreate_Click(object sender, EventArgs e)
         {
+            if (!CloseProject())
+            {
+                return;
+            }
+
             using (var saveFileDialog = new SaveFileDialog())
             {
                 saveFileDialog.Title = "Create project...";
@@ -265,10 +302,24 @@ namespace Train
 
         protected override void OnClosing(CancelEventArgs e)
         {
+            e.Cancel = !CloseProject();
+        }
+
+        void btnClose_Click(object sender, EventArgs e)
+        {
+            CloseProject();
+        }
+
+        bool CloseProject()
+        {
+            if (mCurrentProject == null)
+            {
+                return true;
+            }
+
             if (CheckClassNameEditingOrMessageBox())
             {
-                e.Cancel = true;
-                return;
+                return false;
             }
 
             if (mUnsavedChanges)
@@ -277,19 +328,21 @@ namespace Train
 
                 if (ans == DialogResult.Cancel)
                 {
-                    e.Cancel = true;
-                    return;
+                    return false;
                 }
 
                 if (ans == DialogResult.Yes)
                 {
                     if (!SaveChanges())
                     {
-                        e.Cancel = true;
-                        return;
+                        return false;
                     }
                 }
             }
+
+            EnsureClosedProject();
+
+            return true;
         }
     }
 }
