@@ -26,7 +26,10 @@ namespace Detect
                 openFileDialog.AddExtension = true;
                 openFileDialog.CheckFileExists = true;
                 openFileDialog.CheckPathExists = true;
-                openFileDialog.Filter = "Image files (*.jpeg;*.jpg;*.png)|*.jpeg;*.jpg;*.png";
+
+                string ext = "*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+
+                openFileDialog.Filter = $"Image files ({ext})|{ext}";
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
