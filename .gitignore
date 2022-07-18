@@ -12,3 +12,6 @@
 /src/Detect/.vs
 /src/Detect/Detect/bin
 /src/Detect/Detect/obj
+/src/Train/.vs
+/src/Train/Train/bin
+/src/Train/Train/obj
