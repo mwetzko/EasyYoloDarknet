@@ -22,11 +22,17 @@ namespace Train
             txtClassname.Text = name;
 
             EnsureReadonlyState();
+
+            foreach (var item in new Control[] { txtClassname, btnRename, btnOk, btnCancel, btnDelete, btnColorPicker })
+            {
+                item.GotFocus += OnFocusControl;
+            }
         }
 
         public event EventHandler<BeforeRenameEventArgs> BeforeRename;
         public event EventHandler DeleteClass;
         public event EventHandler UnsavedChanges;
+        public event EventHandler Selected;
         public bool Editing => !txtClassname.ReadOnly;
         public string ClassName => this.Editing ? mTempClassName : txtClassname.Text;
         public int ClassColor => btnColorPicker.BackColor.ToArgb();
@@ -51,9 +57,9 @@ namespace Train
 
         void ClassControl_Resize(object sender, EventArgs e)
         {
-            if (this.Height != tablePanel.Height + 1)
+            if (this.Height != tblActions.Height + 1)
             {
-                this.Height = tablePanel.Height + 1;
+                this.Height = tblActions.Height + 1;
             }
         }
 
@@ -115,6 +121,29 @@ namespace Train
             {
                 btnOk_Click(btnOk, EventArgs.Empty);
             }
+        }
+
+        void rbSelect_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbSelect.Checked)
+            {
+                Selected?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        void OnFocusControl(object sender, EventArgs e)
+        {
+            this.Select();
+        }
+
+        public void Select()
+        {
+            rbSelect.Checked = true;
+        }
+
+        public void Deselect()
+        {
+            rbSelect.Checked = false;
         }
     }
 }
