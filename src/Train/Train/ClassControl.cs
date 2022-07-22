@@ -55,16 +55,20 @@ namespace Train
             }
         }
 
-        void ClassControl_Resize(object sender, EventArgs e)
+        protected override void OnResize(EventArgs e)
         {
+            base.OnResize(e);
+
             if (this.Height != tblActions.Height + 1)
             {
                 this.Height = tblActions.Height + 1;
             }
         }
 
-        void ClassControl_Paint(object sender, PaintEventArgs e)
+        protected override void OnPaint(PaintEventArgs e)
         {
+            base.OnPaint(e);
+
             e.Graphics.DrawLine(Pens.Gray, 0, this.Height - 1, this.Width - 1, this.Height - 1);
         }
 
@@ -136,7 +140,7 @@ namespace Train
             this.Select();
         }
 
-        public void Select()
+        public new void Select()
         {
             rbSelect.Checked = true;
         }

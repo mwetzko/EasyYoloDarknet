@@ -41,20 +41,30 @@ namespace Train
             this.pnlProjectLabel = new System.Windows.Forms.Panel();
             this.lbProject = new System.Windows.Forms.Label();
             this.pnlClasses = new System.Windows.Forms.Panel();
+            this.pnlClassesScroll = new System.Windows.Forms.Panel();
             this.pnlClassesList = new System.Windows.Forms.Panel();
             this.pnlClassNamePadding = new System.Windows.Forms.Panel();
             this.txtNewClass = new System.Windows.Forms.TextBox();
             this.lbClasses = new System.Windows.Forms.Label();
             this.pnlImages = new System.Windows.Forms.Panel();
+            this.pnlImagesScroll = new System.Windows.Forms.Panel();
             this.pnlImagesList = new System.Windows.Forms.Panel();
+            this.pnlImagesAdd = new System.Windows.Forms.Panel();
+            this.tblAddImage = new System.Windows.Forms.TableLayoutPanel();
+            this.btnImageFromClipboard = new System.Windows.Forms.Button();
+            this.btnImageFromFile = new System.Windows.Forms.Button();
             this.blImages = new System.Windows.Forms.Label();
             this.pnlPicture = new System.Windows.Forms.Panel();
             this.pnlControls.SuspendLayout();
             this.flowProject.SuspendLayout();
             this.pnlProjectLabel.SuspendLayout();
             this.pnlClasses.SuspendLayout();
+            this.pnlClassesScroll.SuspendLayout();
             this.pnlClassNamePadding.SuspendLayout();
             this.pnlImages.SuspendLayout();
+            this.pnlImagesScroll.SuspendLayout();
+            this.pnlImagesAdd.SuspendLayout();
+            this.tblAddImage.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlControls
@@ -171,7 +181,7 @@ namespace Train
             // pnlClasses
             // 
             this.pnlClasses.BackColor = System.Drawing.Color.Gainsboro;
-            this.pnlClasses.Controls.Add(this.pnlClassesList);
+            this.pnlClasses.Controls.Add(this.pnlClassesScroll);
             this.pnlClasses.Controls.Add(this.pnlClassNamePadding);
             this.pnlClasses.Controls.Add(this.lbClasses);
             this.pnlClasses.Dock = System.Windows.Forms.DockStyle.Right;
@@ -181,13 +191,22 @@ namespace Train
             this.pnlClasses.Size = new System.Drawing.Size(200, 583);
             this.pnlClasses.TabIndex = 1;
             // 
+            // pnlClassesScroll
+            // 
+            this.pnlClassesScroll.AutoScroll = true;
+            this.pnlClassesScroll.Controls.Add(this.pnlClassesList);
+            this.pnlClassesScroll.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlClassesScroll.Location = new System.Drawing.Point(1, 58);
+            this.pnlClassesScroll.Name = "pnlClassesScroll";
+            this.pnlClassesScroll.Size = new System.Drawing.Size(198, 525);
+            this.pnlClassesScroll.TabIndex = 6;
+            // 
             // pnlClassesList
             // 
-            this.pnlClassesList.AutoScroll = true;
-            this.pnlClassesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlClassesList.Location = new System.Drawing.Point(1, 58);
+            this.pnlClassesList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlClassesList.Location = new System.Drawing.Point(0, 0);
             this.pnlClassesList.Name = "pnlClassesList";
-            this.pnlClassesList.Size = new System.Drawing.Size(198, 525);
+            this.pnlClassesList.Size = new System.Drawing.Size(198, 388);
             this.pnlClassesList.TabIndex = 4;
             // 
             // pnlClassNamePadding
@@ -201,7 +220,7 @@ namespace Train
             this.pnlClassNamePadding.Padding = new System.Windows.Forms.Padding(3, 3, 3, 4);
             this.pnlClassNamePadding.Size = new System.Drawing.Size(198, 30);
             this.pnlClassNamePadding.TabIndex = 5;
-            this.pnlClassNamePadding.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlClassNamePadding_Paint);
+            this.pnlClassNamePadding.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
             // 
             // txtNewClass
             // 
@@ -221,11 +240,13 @@ namespace Train
             this.lbClasses.TabIndex = 2;
             this.lbClasses.Text = "Classes";
             this.lbClasses.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbClasses.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
             // 
             // pnlImages
             // 
             this.pnlImages.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.pnlImages.Controls.Add(this.pnlImagesList);
+            this.pnlImages.Controls.Add(this.pnlImagesScroll);
+            this.pnlImages.Controls.Add(this.pnlImagesAdd);
             this.pnlImages.Controls.Add(this.blImages);
             this.pnlImages.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlImages.Location = new System.Drawing.Point(704, 58);
@@ -234,14 +255,76 @@ namespace Train
             this.pnlImages.Size = new System.Drawing.Size(200, 583);
             this.pnlImages.TabIndex = 2;
             // 
+            // pnlImagesScroll
+            // 
+            this.pnlImagesScroll.AutoScroll = true;
+            this.pnlImagesScroll.Controls.Add(this.pnlImagesList);
+            this.pnlImagesScroll.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlImagesScroll.Location = new System.Drawing.Point(1, 58);
+            this.pnlImagesScroll.Name = "pnlImagesScroll";
+            this.pnlImagesScroll.Size = new System.Drawing.Size(198, 525);
+            this.pnlImagesScroll.TabIndex = 6;
+            // 
             // pnlImagesList
             // 
-            this.pnlImagesList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlImagesList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlImagesList.Location = new System.Drawing.Point(1, 28);
+            this.pnlImagesList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlImagesList.Location = new System.Drawing.Point(0, 0);
             this.pnlImagesList.Name = "pnlImagesList";
-            this.pnlImagesList.Size = new System.Drawing.Size(198, 555);
+            this.pnlImagesList.Size = new System.Drawing.Size(198, 388);
             this.pnlImagesList.TabIndex = 4;
+            // 
+            // pnlImagesAdd
+            // 
+            this.pnlImagesAdd.AutoSize = true;
+            this.pnlImagesAdd.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.pnlImagesAdd.Controls.Add(this.tblAddImage);
+            this.pnlImagesAdd.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlImagesAdd.Location = new System.Drawing.Point(1, 28);
+            this.pnlImagesAdd.Name = "pnlImagesAdd";
+            this.pnlImagesAdd.Padding = new System.Windows.Forms.Padding(0, 0, 0, 1);
+            this.pnlImagesAdd.Size = new System.Drawing.Size(198, 30);
+            this.pnlImagesAdd.TabIndex = 5;
+            this.pnlImagesAdd.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
+            // 
+            // tblAddImage
+            // 
+            this.tblAddImage.AutoSize = true;
+            this.tblAddImage.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tblAddImage.ColumnCount = 2;
+            this.tblAddImage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tblAddImage.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tblAddImage.Controls.Add(this.btnImageFromClipboard, 1, 0);
+            this.tblAddImage.Controls.Add(this.btnImageFromFile, 0, 0);
+            this.tblAddImage.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tblAddImage.Location = new System.Drawing.Point(0, 0);
+            this.tblAddImage.Margin = new System.Windows.Forms.Padding(0);
+            this.tblAddImage.Name = "tblAddImage";
+            this.tblAddImage.RowCount = 1;
+            this.tblAddImage.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblAddImage.Size = new System.Drawing.Size(198, 29);
+            this.tblAddImage.TabIndex = 0;
+            // 
+            // btnImageFromClipboard
+            // 
+            this.btnImageFromClipboard.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnImageFromClipboard.Location = new System.Drawing.Point(84, 3);
+            this.btnImageFromClipboard.Name = "btnImageFromClipboard";
+            this.btnImageFromClipboard.Size = new System.Drawing.Size(111, 23);
+            this.btnImageFromClipboard.TabIndex = 1;
+            this.btnImageFromClipboard.Text = "From Clipboard";
+            this.btnImageFromClipboard.UseVisualStyleBackColor = true;
+            this.btnImageFromClipboard.Click += new System.EventHandler(this.btnImageFromClipboard_Click);
+            // 
+            // btnImageFromFile
+            // 
+            this.btnImageFromFile.Location = new System.Drawing.Point(3, 3);
+            this.btnImageFromFile.Name = "btnImageFromFile";
+            this.btnImageFromFile.Size = new System.Drawing.Size(75, 23);
+            this.btnImageFromFile.TabIndex = 0;
+            this.btnImageFromFile.Text = "From File";
+            this.btnImageFromFile.UseVisualStyleBackColor = true;
+            this.btnImageFromFile.Click += new System.EventHandler(this.btnImageFromFile_Click);
             // 
             // blImages
             // 
@@ -252,6 +335,7 @@ namespace Train
             this.blImages.TabIndex = 3;
             this.blImages.Text = "Images";
             this.blImages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.blImages.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
             // 
             // pnlPicture
             // 
@@ -282,9 +366,15 @@ namespace Train
             this.pnlProjectLabel.PerformLayout();
             this.pnlClasses.ResumeLayout(false);
             this.pnlClasses.PerformLayout();
+            this.pnlClassesScroll.ResumeLayout(false);
             this.pnlClassNamePadding.ResumeLayout(false);
             this.pnlClassNamePadding.PerformLayout();
             this.pnlImages.ResumeLayout(false);
+            this.pnlImages.PerformLayout();
+            this.pnlImagesScroll.ResumeLayout(false);
+            this.pnlImagesAdd.ResumeLayout(false);
+            this.pnlImagesAdd.PerformLayout();
+            this.tblAddImage.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -310,5 +400,11 @@ namespace Train
         private Panel pnlImagesList;
         private Panel pnlClassesList;
         private Panel pnlClassNamePadding;
+        private Panel pnlClassesScroll;
+        private Panel pnlImagesScroll;
+        private Panel pnlImagesAdd;
+        private Button btnImageFromFile;
+        private Button btnImageFromClipboard;
+        private TableLayoutPanel tblAddImage;
     }
 }

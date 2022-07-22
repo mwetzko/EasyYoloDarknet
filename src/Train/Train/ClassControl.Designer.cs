@@ -50,6 +50,7 @@
             // 
             // btnColorPicker
             // 
+            this.btnColorPicker.Cursor = System.Windows.Forms.Cursors.Help;
             this.btnColorPicker.Location = new System.Drawing.Point(316, 3);
             this.btnColorPicker.Name = "btnColorPicker";
             this.btnColorPicker.Size = new System.Drawing.Size(23, 23);
@@ -110,6 +111,7 @@
             // 
             // btnOk
             // 
+            this.btnOk.Cursor = System.Windows.Forms.Cursors.Help;
             this.btnOk.Location = new System.Drawing.Point(32, 3);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(23, 23);
@@ -121,6 +123,7 @@
             // 
             // btnDelete
             // 
+            this.btnDelete.Cursor = System.Windows.Forms.Cursors.Help;
             this.btnDelete.Location = new System.Drawing.Point(90, 3);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(23, 23);
@@ -132,6 +135,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Cursor = System.Windows.Forms.Cursors.Help;
             this.btnCancel.Location = new System.Drawing.Point(61, 3);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(23, 23);
@@ -143,6 +147,7 @@
             // 
             // btnRename
             // 
+            this.btnRename.Cursor = System.Windows.Forms.Cursors.Help;
             this.btnRename.Location = new System.Drawing.Point(3, 3);
             this.btnRename.Name = "btnRename";
             this.btnRename.Size = new System.Drawing.Size(23, 23);
@@ -174,9 +179,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tblActions);
             this.Name = "ClassControl";
-            this.Size = new System.Drawing.Size(342, 106);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.ClassControl_Paint);
-            this.Resize += new System.EventHandler(this.ClassControl_Resize);
+            this.Size = new System.Drawing.Size(342, 100);
             this.tblActions.ResumeLayout(false);
             this.tblActions.PerformLayout();
             this.tblPanelButtons.ResumeLayout(false);

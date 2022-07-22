@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -72,7 +73,33 @@ namespace Train
                     cc.UnsavedChanges += OnUnsavedChanges;
                     cc.DeleteClass += OnDeleteClass;
                     cc.BeforeRename += OnBeforeRenameClass;
+                    cc.Selected += OnClassSelection;
                     pnlClassesList.Controls.Add(cc);
+                }
+
+                if (pnlClassesList.Controls.Count > 0)
+                {
+                    pnlClassesList.Controls.Cast<ClassControl>().Last().Select();
+                }
+            }
+
+            if (mCurrentProject.Images != null)
+            {
+                var pd = Path.GetDirectoryName(mCurrentProjectFile);
+
+                var path = Path.Combine(pd, "Images");
+
+                foreach (var item in mCurrentProject.Images)
+                {
+                    var cc = new ImageControl(Path.Combine(path, item.Name)) { Dock = DockStyle.Top };
+                    cc.DeleteImage += OnDeleteImage;
+                    cc.Selected += OnImageSelection;
+                    pnlImagesList.Controls.Add(cc);
+                }
+
+                if (pnlImagesList.Controls.Count > 0)
+                {
+                    pnlImagesList.Controls.Cast<ImageControl>().Last().Select();
                 }
             }
 
@@ -81,17 +108,53 @@ namespace Train
             btnClose.Visible = true;
             pnlDiffer.Visible = true;
             pnlImages.Visible = true;
+            pnlImagesList.AutoSize = true;
+            pnlImagesList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             pnlClasses.Visible = true;
+            pnlClassesList.AutoSize = true;
+            pnlClassesList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
             txtNewClass.Text = string.Empty;
         }
 
+        void DeleteUnusedFile(string filename)
+        {
+            try
+            {
+                File.Delete(filename);
+            }
+            catch (Exception)
+            {
+                // nothing
+            }
+        }
+
         void EnsureClosedProject()
         {
-            mCurrentProjectFile = null;
+            var pd = Path.GetDirectoryName(mCurrentProjectFile);
+
+            var path = Path.Combine(pd, "Images");
+
+            foreach (var image in Directory.EnumerateFiles(path))
+            {
+                if (mCurrentProject.Images != null)
+                {
+                    var name = Path.GetFileName(image);
+
+                    if (!mCurrentProject.Images.Contains(x => string.Equals(x.Name, name, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        DeleteUnusedFile(image);
+                    }
+                }
+                else
+                {
+                    DeleteUnusedFile(image);
+                }
+            }
 
             EnsureDefaultProjectNameText();
 
+            mCurrentProjectFile = null;
             mCurrentProject = null;
 
             pnlImagesList.Controls.Clear();
@@ -191,7 +254,10 @@ namespace Train
                 cc.UnsavedChanges += OnUnsavedChanges;
                 cc.DeleteClass += OnDeleteClass;
                 cc.BeforeRename += OnBeforeRenameClass;
+                cc.Selected += OnClassSelection;
                 pnlClassesList.Controls.Add(cc);
+
+                cc.Select();
 
                 txtNewClass.Text = string.Empty;
 
@@ -199,9 +265,11 @@ namespace Train
             }
         }
 
-        void pnlClassNamePadding_Paint(object sender, PaintEventArgs e)
+        void PaintBottomLine(object sender, PaintEventArgs e)
         {
-            e.Graphics.DrawLine(Pens.Gray, 0, pnlClassNamePadding.Height - 1, pnlClassNamePadding.Width - 1, pnlClassNamePadding.Height - 1);
+            Control c = (Control)sender;
+
+            e.Graphics.DrawLine(Pens.Gray, 0, c.Height - 1, c.Width - 1, c.Height - 1);
         }
 
         void OnUnsavedChanges(object sender, EventArgs e)
@@ -264,6 +332,7 @@ namespace Train
             ProjectData pd = new ProjectData();
 
             pd.Classes = pnlClassesList.Controls.Cast<ClassControl>().Select(x => new ClassName() { Name = x.ClassName, Color = x.ClassColor }).ToArray();
+            pd.Images = pnlImagesList.Controls.Cast<ImageControl>().Select(x => new ImageInfo() { Name = x.ImageName }).ToArray();
 
             try
             {
@@ -343,6 +412,126 @@ namespace Train
             EnsureClosedProject();
 
             return true;
+        }
+
+        void OnClassSelection(object sender, EventArgs e)
+        {
+            foreach (var item in pnlClassesList.Controls.Cast<ClassControl>())
+            {
+                if (item == sender)
+                {
+                    item.Select();
+                }
+                else
+                {
+                    item.Deselect();
+                }
+            }
+        }
+
+        void btnImageFromFile_Click(object sender, EventArgs e)
+        {
+            using (var openFileDialog = new OpenFileDialog())
+            {
+                openFileDialog.Title = "Open image(s)...";
+                openFileDialog.Multiselect = true;
+                openFileDialog.CheckFileExists = true;
+                openFileDialog.CheckPathExists = true;
+
+                string ext = "*.jpg;*.jpeg;*.png;*.bmp;*.gif";
+
+                openFileDialog.Filter = $"Image files ({ext})|{ext}";
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    ImageControl cc = null;
+
+                    foreach (var item in openFileDialog.FileNames)
+                    {
+                        using (Image img = Image.FromFile(item))
+                        {
+                            cc = AddImage(img);
+                        }
+                    }
+
+                    cc?.Select();
+                }
+            }
+        }
+
+        void btnImageFromClipboard_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsImage())
+            {
+                AddImage(Clipboard.GetImage());
+            }
+        }
+
+        ImageControl AddImage(Image img)
+        {
+            var pd = Path.GetDirectoryName(mCurrentProjectFile);
+
+            var path = Path.Combine(pd, "Images");
+
+            try
+            {
+                if (!Directory.Exists(path))
+                {
+                    Directory.CreateDirectory(path);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Cannot create image directory: {ex.Message}", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            var name = Guid.NewGuid().ToString("N") + ".png";
+
+            path = Path.Combine(path, name);
+
+            try
+            {
+                img.Save(path, ImageFormat.Png);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Cannot save image copy: {ex.Message}", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            var cc = new ImageControl(path) { Dock = DockStyle.Top };
+            cc.DeleteImage += OnDeleteImage;
+            cc.Selected += OnImageSelection;
+            pnlImagesList.Controls.Add(cc);
+
+            EnsureUnsavedInfo();
+
+            return cc;
+        }
+
+        void OnDeleteImage(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Deleting an image will remove all marks of that image! Are you really sure?", FORM_NAME, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+            {
+                pnlImagesList.Controls.Remove((Control)sender);
+                EnsureUnsavedInfo();
+            }
+        }
+
+        void OnImageSelection(object sender, EventArgs e)
+        {
+            foreach (var item in pnlImagesList.Controls.Cast<ImageControl>())
+            {
+                if (item == sender)
+                {
+                    item.Select();
+                }
+                else
+                {
+                    item.Deselect();
+                }
+            }
         }
     }
 }
