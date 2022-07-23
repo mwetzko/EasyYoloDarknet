@@ -526,6 +526,7 @@ namespace Train
                 if (item == sender)
                 {
                     item.Select();
+                    imageEditor.Image = item.Image;
                 }
                 else
                 {

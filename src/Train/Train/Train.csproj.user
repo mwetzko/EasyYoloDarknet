@@ -7,6 +7,9 @@
     <Compile Update="ImageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="ImageEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Update="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

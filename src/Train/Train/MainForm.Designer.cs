@@ -54,7 +54,7 @@ namespace Train
             this.btnImageFromClipboard = new System.Windows.Forms.Button();
             this.btnImageFromFile = new System.Windows.Forms.Button();
             this.blImages = new System.Windows.Forms.Label();
-            this.pnlPicture = new System.Windows.Forms.Panel();
+            this.imageEditor = new Train.ImageEditor();
             this.pnlControls.SuspendLayout();
             this.flowProject.SuspendLayout();
             this.pnlProjectLabel.SuspendLayout();
@@ -337,23 +337,25 @@ namespace Train
             this.blImages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.blImages.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
             // 
-            // pnlPicture
+            // imageEditor
             // 
-            this.pnlPicture.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlPicture.Location = new System.Drawing.Point(0, 58);
-            this.pnlPicture.Name = "pnlPicture";
-            this.pnlPicture.Size = new System.Drawing.Size(704, 583);
-            this.pnlPicture.TabIndex = 3;
+            this.imageEditor.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.imageEditor.Image = null;
+            this.imageEditor.Location = new System.Drawing.Point(0, 58);
+            this.imageEditor.Name = "imageEditor";
+            this.imageEditor.Size = new System.Drawing.Size(704, 583);
+            this.imageEditor.TabIndex = 3;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1104, 641);
-            this.Controls.Add(this.pnlPicture);
+            this.Controls.Add(this.imageEditor);
             this.Controls.Add(this.pnlImages);
             this.Controls.Add(this.pnlClasses);
             this.Controls.Add(this.pnlControls);
+            this.DoubleBuffered = true;
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Train";
@@ -393,7 +395,6 @@ namespace Train
         private Button btnClose;
         private Panel pnlClasses;
         private Panel pnlImages;
-        private Panel pnlPicture;
         private Label lbClasses;
         private Label blImages;
         private TextBox txtNewClass;
@@ -406,5 +407,6 @@ namespace Train
         private Button btnImageFromFile;
         private Button btnImageFromClipboard;
         private TableLayoutPanel tblAddImage;
+        private ImageEditor imageEditor;
     }
 }
