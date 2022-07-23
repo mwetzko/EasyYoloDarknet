@@ -7,18 +7,22 @@ namespace Train
     public partial class ImageEditor : UserControl
     {
         Image mImage;
-        float mScale = 1.0f;
+        int mScale = 100;
+        int mScaleMultiplier = 1;
         PointF mMouseLocation;
         PointF mImagePos;
-        PointF? mMoveImage;
-        float mImageWidth;
-        float mImageHeight;
+        SizeF mImageSize;
+        bool mFromCenter;
 
         public ImageEditor()
         {
             InitializeComponent();
 
+            bufferPanel.MouseWheel += bufferPanel_MouseWheel;
+
             this.DoubleBuffered = true;
+
+            UpdateScaleText();
         }
 
         public Image Image
@@ -33,109 +37,142 @@ namespace Train
 
                 if (mImage != null)
                 {
-                    mImagePos.X = (this.Width / 2f) - (mImageWidth / 2f);
-                    mImagePos.Y = (this.Height / 2f) - (mImageHeight / 2f);
+                    CalcImageSize();
+                    CenterImage();
 
-                    RevalidateImage();
+                    bufferPanel.Invalidate();
                 }
             }
         }
 
-        protected override void OnMouseWheel(MouseEventArgs e)
+        void UpdateScaleText()
         {
-            base.OnMouseWheel(e);
+            lbScale.Text = $"{mScale} %";
+        }
+
+        void CenterImage()
+        {
+            mFromCenter = true;
+            mImagePos.X = (bufferPanel.Width / 2f) - (mImageSize.Width / 2f);
+            mImagePos.Y = (bufferPanel.Height / 2f) - (mImageSize.Height / 2f);
+        }
+
+        void CalcImageSize()
+        {
+            var s = mScale / 100f;
+
+            mImageSize.Width = this.Image.Width * s;
+            mImageSize.Height = this.Image.Height * s;
+        }
+
+        void CalcRelativeImagePos(SizeF formerImageSize)
+        {
+            if (mMouseLocation.X < mImagePos.X || mMouseLocation.X > (mImagePos.X + formerImageSize.Width))
+            {
+                mImagePos.X = mImagePos.X + (formerImageSize.Width / 2) - (mImageSize.Width / 2);
+            }
+            else
+            {
+                mImagePos.X = mMouseLocation.X - (((mMouseLocation.X - mImagePos.X) / formerImageSize.Width) * mImageSize.Width);
+            }
+
+            if (mMouseLocation.Y < mImagePos.Y || mMouseLocation.Y > (mImagePos.Y + formerImageSize.Height))
+            {
+                mImagePos.Y = mImagePos.Y + (formerImageSize.Height / 2) - (mImageSize.Height / 2);
+            }
+            else
+            {
+                mImagePos.Y = mMouseLocation.Y - (((mMouseLocation.Y - mImagePos.Y) / formerImageSize.Height) * mImageSize.Height);
+            }
+        }
+
+        void bufferPanel_Paint(object sender, PaintEventArgs e)
+        {
+            if (this.Image != null)
+            {
+                e.Graphics.DrawImage(this.Image, mImagePos.X, mImagePos.Y, mImageSize.Width, mImageSize.Height);
+            }
+        }
+
+        void bufferPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            mMouseLocation = e.Location;
+        }
+
+        void bufferPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            mMouseLocation = e.Location;
+        }
+
+        void bufferPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && this.Image != null)
+            {
+                mImagePos.X += (e.X - mMouseLocation.X);
+                mImagePos.Y += (e.Y - mMouseLocation.Y);
+
+                bufferPanel.Invalidate();
+            }
+
+            mMouseLocation = e.Location;
+        }
+
+        void bufferPanel_MouseWheel(object sender, MouseEventArgs e)
+        {
+            mFromCenter = false;
 
             if (e.Delta < 0)
             {
-                mScale -= 0.2f;
-
-                if (mScale < 0.2f)
+                if (mScaleMultiplier > 1)
                 {
-                    mScale = 0.2f;
+                    mScaleMultiplier -= 1;
+
+                    mScale -= (20 * mScaleMultiplier);
+                }
+                else if (mScale > 20)
+                {
+                    mScale -= 20;
                 }
             }
             else
             {
-                mScale += 0.2f;
-
-                if (mScale > 10f)
+                if (mScale < 100)
                 {
-                    mScale = 10f;
+                    mScale += 20;
+                }
+                else if (mScaleMultiplier < 10)
+                {
+                    mScale += (20 * mScaleMultiplier);
+
+                    mScaleMultiplier += 1;
                 }
             }
 
-            if (this.Image != null)
-            {
-                RevalidateImage();
-            }
-        }
-
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-
-            if (e.Button == MouseButtons.Right)
-            {
-                mMoveImage = mImagePos;
-                mMouseLocation = e.Location;
-            }
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-
-            mMoveImage = null;
-        }
-
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-
-            mMoveImage = null;
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-
-            if (mMoveImage.HasValue && this.Image != null)
-            {
-                mImagePos.X = mMoveImage.Value.X + (e.X - mMouseLocation.X);
-                mImagePos.Y = mMoveImage.Value.Y + (e.Y - mMouseLocation.Y);
-
-                RevalidateImage();
-            }
-        }
-
-        void RevalidateImage()
-        {
-            mImageWidth = (float)this.Image.Width * mScale;
-            mImageHeight = (float)this.Image.Height * mScale;
-
-            this.Invalidate();
-        }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
+            UpdateScaleText();
 
             if (this.Image != null)
             {
-                e.Graphics.DrawImage(this.Image, mImagePos.X, mImagePos.Y, mImageWidth, mImageHeight);
+                SizeF sz = mImageSize;
+
+                CalcImageSize();
+                CalcRelativeImagePos(sz);
+
+                bufferPanel.Invalidate();
             }
         }
 
-        protected override void OnResize(EventArgs e)
+        void bufferPanel_Resize(object sender, EventArgs e)
         {
-            base.OnResize(e);
-
-            if (this.Image != null)
+            if (mFromCenter)
             {
-                RevalidateImage();
-
-                this.Invalidate();
+                CenterImage();
             }
+            else
+            {
+                CalcRelativeImagePos(mImageSize);
+            }
+
+            bufferPanel.Invalidate();
         }
     }
 }
