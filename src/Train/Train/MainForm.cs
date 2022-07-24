@@ -73,7 +73,7 @@ namespace Train
                     ProjectState.AddClass(item);
 
                     var cc = new ClassControl(item) { Dock = DockStyle.Top };
-                    cc.UnsavedChanges += OnUnsavedChanges;
+                    cc.UnsavedChanges += OnClassNameUnsavedChanges;
                     cc.DeleteClass += OnDeleteClass;
                     cc.BeforeRename += OnBeforeRenameClass;
                     cc.Selected += OnClassSelection;
@@ -96,11 +96,11 @@ namespace Train
                 {
                     ProjectState.AddMarks(item.Marks);
 
-                    var cc = new ImageControl(Path.Combine(path, item.Name), item.Marks) { Dock = DockStyle.Top };
-                    cc.UnsavedChanges += OnUnsavedChanges;
-                    cc.DeleteImage += OnDeleteImage;
-                    cc.Selected += OnImageSelection;
-                    pnlImagesList.Controls.Add(cc);
+                    var ic = new ImageControl(Path.Combine(path, item.Name), item.Marks) { Dock = DockStyle.Top };
+                    ic.UnsavedChanges += OnUnsavedChanges;
+                    ic.DeleteImage += OnDeleteImage;
+                    ic.Selected += OnImageSelection;
+                    pnlImagesList.Controls.Add(ic);
                 }
 
                 if (pnlImagesList.Controls.Count > 0)
@@ -263,7 +263,7 @@ namespace Train
                 ProjectState.AddClass(cn);
 
                 var cc = new ClassControl(cn) { Dock = DockStyle.Top };
-                cc.UnsavedChanges += OnUnsavedChanges;
+                cc.UnsavedChanges += OnClassNameUnsavedChanges;
                 cc.DeleteClass += OnDeleteClass;
                 cc.BeforeRename += OnBeforeRenameClass;
                 cc.Selected += OnClassSelection;
@@ -282,6 +282,13 @@ namespace Train
             Control c = (Control)sender;
 
             e.Graphics.DrawLine(Pens.Gray, 0, c.Height - 1, c.Width - 1, c.Height - 1);
+        }
+
+        void OnClassNameUnsavedChanges(object sender, EventArgs e)
+        {
+            imageEditor.OnClassNameChange();
+
+            EnsureUnsavedInfo();
         }
 
         void OnUnsavedChanges(object sender, EventArgs e)
@@ -459,17 +466,17 @@ namespace Train
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    ImageControl cc = null;
+                    ImageControl ic = null;
 
                     foreach (var item in openFileDialog.FileNames)
                     {
                         using (Image img = Image.FromFile(item))
                         {
-                            cc = AddImage(img);
+                            ic = AddImage(img);
                         }
                     }
 
-                    cc?.Select();
+                    ic?.Select();
                 }
             }
         }
@@ -515,15 +522,15 @@ namespace Train
                 return null;
             }
 
-            var cc = new ImageControl(path, null) { Dock = DockStyle.Top };
-            cc.UnsavedChanges += OnUnsavedChanges;
-            cc.DeleteImage += OnDeleteImage;
-            cc.Selected += OnImageSelection;
-            pnlImagesList.Controls.Add(cc);
+            var ic = new ImageControl(path, null) { Dock = DockStyle.Top };
+            ic.UnsavedChanges += OnUnsavedChanges;
+            ic.DeleteImage += OnDeleteImage;
+            ic.Selected += OnImageSelection;
+            pnlImagesList.Controls.Add(ic);
 
             EnsureUnsavedInfo();
 
-            return cc;
+            return ic;
         }
 
         void OnDeleteImage(object sender, EventArgs e)

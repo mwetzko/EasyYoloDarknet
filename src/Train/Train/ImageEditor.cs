@@ -13,6 +13,7 @@ namespace Train
         Rectangle mImageRect;
         bool mFromCenter;
         Rectangle mSelection;
+        Font mScaleFont;
 
         public ImageEditor()
         {
@@ -22,7 +23,7 @@ namespace Train
 
             this.DoubleBuffered = true;
 
-            UpdateScaleText();
+            UpdateScaleInfo();
         }
 
         public event EventHandler<GetImageClassNameArgs> GetImageClassName;
@@ -55,8 +56,10 @@ namespace Train
 
         bool HasImage => this.Image != null;
 
-        void UpdateScaleText()
+        void UpdateScaleInfo()
         {
+            mScaleFont = new Font(this.Font.FontFamily, 8 * (mScale / 100f));
+
             lbScale.Text = $"{mScale} %";
         }
 
@@ -98,13 +101,20 @@ namespace Train
 
                 foreach (var item in this.Marks)
                 {
-                    using (Pen p = new Pen(Color.FromArgb(item.ClassName.Color)))
-                    {
-                        float w = mImageRect.Width * item.Width;
-                        float h = mImageRect.Height * item.Height;
-                        float x = mImageRect.X + ((mImageRect.Width * item.CenterX) - (w / 2));
-                        float y = mImageRect.Y + ((mImageRect.Height * item.CenterY) - (h / 2));
+                    var c = Color.FromArgb(item.ClassName.Color);
 
+                    float w = mImageRect.Width * item.Width;
+                    float h = mImageRect.Height * item.Height;
+                    float x = mImageRect.X + ((mImageRect.Width * item.CenterX) - (w / 2));
+                    float y = mImageRect.Y + ((mImageRect.Height * item.CenterY) - (h / 2));
+
+                    using (Brush b = new SolidBrush(c))
+                    {
+                        e.Graphics.DrawString(item.ClassName.Name, mScaleFont, b, x, y);
+                    }
+
+                    using (Pen p = new Pen(c))
+                    {
                         e.Graphics.DrawRectangle(p, x, y, w, h);
                     }
                 }
@@ -248,7 +258,7 @@ namespace Train
                         }
                     }
 
-                    UpdateScaleText();
+                    UpdateScaleInfo();
 
                     Size sz = mImageRect.Size;
 
@@ -275,6 +285,11 @@ namespace Train
 
                 bufferPanel.Invalidate();
             }
+        }
+
+        public void OnClassNameChange()
+        {
+            bufferPanel.Invalidate();
         }
     }
 }
