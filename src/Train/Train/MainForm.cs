@@ -51,6 +51,19 @@ namespace Train
             lbProjectName.Text = "<Open project or create one>";
         }
 
+        void LoadMarks(ImageMark[] marks)
+        {
+            if (marks == null)
+            {
+                return;
+            }
+
+            foreach (var item in marks)
+            {
+                item.ClassName = mCurrentProject.Classes.First(x => string.Equals(x.ID, item.ClassId));
+            }
+        }
+
         void EnsureLoadedProject(string filename)
         {
             mCurrentProjectFile = filename;
@@ -94,6 +107,8 @@ namespace Train
 
                 foreach (var item in mCurrentProject.Images)
                 {
+                    LoadMarks(item.Marks);
+
                     ProjectState.AddMarks(item.Marks);
 
                     var ic = new ImageControl(Path.Combine(path, item.Name), item.Marks) { Dock = DockStyle.Top };
@@ -163,6 +178,8 @@ namespace Train
             mCurrentProjectFile = null;
             mCurrentProject = null;
 
+            imageEditor.ImageControl = null;
+            imageEditor.Invalidate(true);
             pnlImagesList.Controls.Clear();
             pnlClassesList.Controls.Clear();
 
@@ -351,7 +368,7 @@ namespace Train
             ProjectData pd = new ProjectData();
 
             pd.Classes = pnlClassesList.Controls.Cast<ClassControl>().Select(x => x.ClassName).ToArray();
-            pd.Images = pnlImagesList.Controls.Cast<ImageControl>().Select(x => new ImageInfo() { Name = x.ImageName }).ToArray();
+            pd.Images = pnlImagesList.Controls.Cast<ImageControl>().Select(x => new ImageInfo() { Name = x.ImageName, Marks = x.Marks.ToArray() }).ToArray();
 
             try
             {
