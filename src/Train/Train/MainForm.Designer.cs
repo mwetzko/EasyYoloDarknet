@@ -340,11 +340,12 @@ namespace Train
             // imageEditor
             // 
             this.imageEditor.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.imageEditor.Image = null;
+            this.imageEditor.ImageControl = null;
             this.imageEditor.Location = new System.Drawing.Point(0, 58);
             this.imageEditor.Name = "imageEditor";
             this.imageEditor.Size = new System.Drawing.Size(704, 583);
             this.imageEditor.TabIndex = 3;
+            this.imageEditor.GetImageClassName += new System.EventHandler<Train.GetImageClassNameArgs>(this.imageEditor_GetImageClassName);
             // 
             // MainForm
             // 

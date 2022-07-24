@@ -7,19 +7,21 @@ namespace Train
     partial class ClassControl : UserControl
     {
         string mTempClassName;
+        ClassName mClassName;
 
         public ClassControl()
         {
             InitializeComponent();
         }
 
-        public ClassControl(string name, int color)
+        public ClassControl(ClassName cn)
         {
             InitializeComponent();
 
-            btnColorPicker.BackColor = Color.FromArgb(color);
+            mClassName = cn;
+            btnColorPicker.BackColor = Color.FromArgb(cn.Color);
             colorPicker.Color = btnColorPicker.BackColor;
-            txtClassname.Text = name;
+            txtClassname.Text = cn.Name;
 
             EnsureReadonlyState();
 
@@ -34,8 +36,8 @@ namespace Train
         public event EventHandler UnsavedChanges;
         public event EventHandler Selected;
         public bool Editing => !txtClassname.ReadOnly;
-        public string ClassName => this.Editing ? mTempClassName : txtClassname.Text;
-        public int ClassColor => btnColorPicker.BackColor.ToArgb();
+        public ClassName ClassName => mClassName;
+        public string CurrentClassName => this.Editing ? mTempClassName : txtClassname.Text;
 
         void btnRename_Click(object sender, EventArgs e)
         {
@@ -51,6 +53,7 @@ namespace Train
             if (colorPicker.ShowDialog() == DialogResult.OK && colorPicker.Color != btnColorPicker.BackColor)
             {
                 btnColorPicker.BackColor = colorPicker.Color;
+                mClassName.Color = colorPicker.Color.ToArgb();
                 EnsureUnsavedChanges();
             }
         }
@@ -82,6 +85,8 @@ namespace Train
             {
                 return;
             }
+
+            mClassName.Name = args.Name;
 
             EnsureReadonlyState();
             EnsureUnsavedChanges();

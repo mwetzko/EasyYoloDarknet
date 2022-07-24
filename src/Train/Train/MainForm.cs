@@ -16,6 +16,7 @@ namespace Train
         string mCurrentProjectFile;
         ProjectData mCurrentProject;
         bool mUnsavedChanges;
+        ClassName mSelectedClassName;
 
         public MainForm()
         {
@@ -69,7 +70,9 @@ namespace Train
             {
                 foreach (var item in mCurrentProject.Classes)
                 {
-                    var cc = new ClassControl(item.Name, item.Color) { Dock = DockStyle.Top };
+                    ProjectState.AddClass(item);
+
+                    var cc = new ClassControl(item) { Dock = DockStyle.Top };
                     cc.UnsavedChanges += OnUnsavedChanges;
                     cc.DeleteClass += OnDeleteClass;
                     cc.BeforeRename += OnBeforeRenameClass;
@@ -91,7 +94,10 @@ namespace Train
 
                 foreach (var item in mCurrentProject.Images)
                 {
-                    var cc = new ImageControl(Path.Combine(path, item.Name)) { Dock = DockStyle.Top };
+                    ProjectState.AddMarks(item.Marks);
+
+                    var cc = new ImageControl(Path.Combine(path, item.Name), item.Marks) { Dock = DockStyle.Top };
+                    cc.UnsavedChanges += OnUnsavedChanges;
                     cc.DeleteImage += OnDeleteImage;
                     cc.Selected += OnImageSelection;
                     pnlImagesList.Controls.Add(cc);
@@ -165,6 +171,8 @@ namespace Train
             pnlDiffer.Visible = false;
             pnlImages.Visible = false;
             pnlClasses.Visible = false;
+
+            ProjectState.Clear();
         }
 
         void btnProjectOpen_Click(object sender, EventArgs e)
@@ -250,7 +258,11 @@ namespace Train
                     return;
                 }
 
-                var cc = new ClassControl(txtNewClass.Text, Color.Black.ToArgb()) { Dock = DockStyle.Top };
+                var cn = new ClassName() { ID = Guid.NewGuid().ToString("N"), Name = txtNewClass.Text, Color = Color.Black.ToArgb() };
+
+                ProjectState.AddClass(cn);
+
+                var cc = new ClassControl(cn) { Dock = DockStyle.Top };
                 cc.UnsavedChanges += OnUnsavedChanges;
                 cc.DeleteClass += OnDeleteClass;
                 cc.BeforeRename += OnBeforeRenameClass;
@@ -293,7 +305,7 @@ namespace Train
 
         bool CheckHasClassNameOrMessageBox(string newname)
         {
-            if (pnlClassesList.Controls.Cast<ClassControl>().Any(x => string.Equals(newname, x.ClassName, StringComparison.InvariantCultureIgnoreCase)))
+            if (pnlClassesList.Controls.Cast<ClassControl>().Any(x => string.Equals(newname, x.CurrentClassName, StringComparison.InvariantCultureIgnoreCase)))
             {
                 MessageBox.Show("This class name already exist!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
@@ -331,7 +343,7 @@ namespace Train
 
             ProjectData pd = new ProjectData();
 
-            pd.Classes = pnlClassesList.Controls.Cast<ClassControl>().Select(x => new ClassName() { Name = x.ClassName, Color = x.ClassColor }).ToArray();
+            pd.Classes = pnlClassesList.Controls.Cast<ClassControl>().Select(x => x.ClassName).ToArray();
             pd.Images = pnlImagesList.Controls.Cast<ImageControl>().Select(x => new ImageInfo() { Name = x.ImageName }).ToArray();
 
             try
@@ -359,7 +371,9 @@ namespace Train
         {
             if (MessageBox.Show("Deleting a class will remove all marks of that class from all pictures! Are you really sure?", FORM_NAME, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
-                pnlClassesList.Controls.Remove((Control)sender);
+                ClassControl cc = (ClassControl)sender;
+                ProjectState.RemoveClass(cc.ClassName.ID);
+                pnlClassesList.Controls.Remove(cc);
                 EnsureUnsavedInfo();
             }
         }
@@ -421,6 +435,7 @@ namespace Train
                 if (item == sender)
                 {
                     item.Select();
+                    mSelectedClassName = item.ClassName;
                 }
                 else
                 {
@@ -500,7 +515,8 @@ namespace Train
                 return null;
             }
 
-            var cc = new ImageControl(path) { Dock = DockStyle.Top };
+            var cc = new ImageControl(path, null) { Dock = DockStyle.Top };
+            cc.UnsavedChanges += OnUnsavedChanges;
             cc.DeleteImage += OnDeleteImage;
             cc.Selected += OnImageSelection;
             pnlImagesList.Controls.Add(cc);
@@ -526,13 +542,24 @@ namespace Train
                 if (item == sender)
                 {
                     item.Select();
-                    imageEditor.Image = item.Image;
+                    imageEditor.ImageControl = item;
                 }
                 else
                 {
                     item.Deselect();
                 }
             }
+        }
+
+        void imageEditor_GetImageClassName(object sender, GetImageClassNameArgs e)
+        {
+            if (mSelectedClassName == null)
+            {
+                MessageBox.Show("You must select a class to draw marks!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            e.ClassName = mSelectedClassName;
         }
     }
 }

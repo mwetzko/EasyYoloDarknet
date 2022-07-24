@@ -1,4 +1,6 @@
-﻿namespace Train
+﻿using Newtonsoft.Json;
+
+namespace Train
 {
     class ProjectData
     {
@@ -8,6 +10,7 @@
 
     class ClassName
     {
+        public string ID { get; set; }
         public string Name { get; set; }
         public int Color { get; set; }
     }
@@ -20,9 +23,12 @@
 
     class ImageMark
     {
+        public string ClassId { get; set; }
         public float CenterX { get; set; }
         public float CenterY { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
+        [JsonIgnore]
+        public ClassName ClassName { get; set; }
     }
 }

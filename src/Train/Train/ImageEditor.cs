@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace Train
 {
-    public partial class ImageEditor : UserControl
+    partial class ImageEditor : UserControl
     {
-        Image mImage;
         int mScale = 100;
         int mScaleMultiplier = 1;
         Point mMouseLocation;
@@ -25,15 +25,19 @@ namespace Train
             UpdateScaleText();
         }
 
-        public Image Image
+        public event EventHandler<GetImageClassNameArgs> GetImageClassName;
+
+        ImageControl mImageControl;
+
+        public ImageControl ImageControl
         {
             get
             {
-                return mImage;
+                return mImageControl;
             }
             set
             {
-                mImage = value;
+                mImageControl = value;
 
                 if (this.HasImage)
                 {
@@ -45,13 +49,11 @@ namespace Train
             }
         }
 
-        public bool HasImage
-        {
-            get
-            {
-                return mImage != null;
-            }
-        }
+        Image Image => mImageControl?.Image;
+
+        IEnumerable<ImageMark> Marks => mImageControl?.Marks;
+
+        bool HasImage => this.Image != null;
 
         void UpdateScaleText()
         {
@@ -93,58 +95,96 @@ namespace Train
             if (this.HasImage)
             {
                 e.Graphics.DrawImage(this.Image, mImageRect);
-            }
 
-            if (mSelection.Width != 0 && mSelection.Height != 0)
-            {
-                Rectangle rect = new Rectangle();
+                foreach (var item in this.Marks)
+                {
+                    using (Pen p = new Pen(Color.FromArgb(item.ClassName.Color)))
+                    {
+                        float w = mImageRect.Width * item.Width;
+                        float h = mImageRect.Height * item.Height;
+                        float x = mImageRect.X + ((mImageRect.Width * item.CenterX) - (w / 2));
+                        float y = mImageRect.Y + ((mImageRect.Height * item.CenterY) - (h / 2));
 
-                if (mSelection.Width > 0)
-                {
-                    rect.X = mSelection.X;
-                    rect.Width = mSelection.Width;
-                }
-                else
-                {
-                    rect.X = mSelection.X + mSelection.Width;
-                    rect.Width = -mSelection.Width;
+                        e.Graphics.DrawRectangle(p, x, y, w, h);
+                    }
                 }
 
-                if (mSelection.Height > 0)
+                if (mSelection.Width != 0 && mSelection.Height != 0)
                 {
-                    rect.Y = mSelection.Y;
-                    rect.Height = mSelection.Height;
-                }
-                else
-                {
-                    rect.Y = mSelection.Y + mSelection.Height;
-                    rect.Height = -mSelection.Height;
-                }
+                    Rectangle rect = new Rectangle();
 
-                rect = Rectangle.Intersect(mImageRect, rect);
+                    if (mSelection.Width > 0)
+                    {
+                        rect.X = mSelection.X;
+                        rect.Width = mSelection.Width;
+                    }
+                    else
+                    {
+                        rect.X = mSelection.X + mSelection.Width;
+                        rect.Width = -mSelection.Width;
+                    }
 
-                ControlPaint.DrawFocusRectangle(e.Graphics, rect);
+                    if (mSelection.Height > 0)
+                    {
+                        rect.Y = mSelection.Y;
+                        rect.Height = mSelection.Height;
+                    }
+                    else
+                    {
+                        rect.Y = mSelection.Y + mSelection.Height;
+                        rect.Height = -mSelection.Height;
+                    }
+
+                    rect = Rectangle.Intersect(mImageRect, rect);
+
+                    ControlPaint.DrawFocusRectangle(e.Graphics, rect);
+                }
             }
         }
 
         void bufferPanel_MouseDown(object sender, MouseEventArgs e)
         {
+            bufferPanel.Focus();
+
             mMouseLocation = e.Location;
 
-            if (e.Button == MouseButtons.Left)
+            if (this.HasImage)
             {
-                mSelection = new Rectangle(mMouseLocation, new Size(0, 0));
+                if (e.Button == MouseButtons.Left)
+                {
+                    mSelection = new Rectangle(mMouseLocation, new Size(0, 0));
+                }
             }
         }
 
         void bufferPanel_MouseUp(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (bufferPanel.Focused && this.HasImage)
             {
-                mSelection.Width = 0;
-                mSelection.Height = 0;
+                if (e.Button == MouseButtons.Left)
+                {
+                    if (mSelection.Width > 0 && mSelection.Height > 0)
+                    {
+                        GetImageClassNameArgs args = new GetImageClassNameArgs();
 
-                bufferPanel.Invalidate();
+                        GetImageClassName?.Invoke(this, args);
+
+                        if (args.ClassName != null)
+                        {
+                            float w = (float)mSelection.Width / (float)mImageRect.Width;
+                            float h = (float)mSelection.Height / (float)mImageRect.Height;
+                            float x = ((mSelection.X - mImageRect.X) + (mSelection.Width / 2f)) / (float)mImageRect.Width;
+                            float y = ((mSelection.Y - mImageRect.Y) + (mSelection.Height / 2f)) / (float)mImageRect.Height;
+
+                            this.ImageControl.AddImageMark(args.ClassName, new RectangleF(x, y, w, h));
+                        }
+                    }
+
+                    mSelection.Width = 0;
+                    mSelection.Height = 0;
+
+                    bufferPanel.Invalidate();
+                }
             }
 
             mMouseLocation = e.Location;
@@ -152,19 +192,22 @@ namespace Train
 
         void bufferPanel_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (bufferPanel.Focused && this.HasImage)
             {
-                mSelection.Width = e.X - mSelection.Location.X;
-                mSelection.Height = e.Y - mSelection.Location.Y;
+                if (e.Button == MouseButtons.Left)
+                {
+                    mSelection.Width = e.X - mSelection.Location.X;
+                    mSelection.Height = e.Y - mSelection.Location.Y;
 
-                bufferPanel.Invalidate();
-            }
-            else if (e.Button == MouseButtons.Right && this.HasImage)
-            {
-                mImageRect.X += (e.X - mMouseLocation.X);
-                mImageRect.Y += (e.Y - mMouseLocation.Y);
+                    bufferPanel.Invalidate();
+                }
+                else if (e.Button == MouseButtons.Right)
+                {
+                    mImageRect.X += (e.X - mMouseLocation.X);
+                    mImageRect.Y += (e.Y - mMouseLocation.Y);
 
-                bufferPanel.Invalidate();
+                    bufferPanel.Invalidate();
+                }
             }
 
             mMouseLocation = e.Location;
