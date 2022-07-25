@@ -61,6 +61,22 @@ namespace Train
             }
         }
 
+        public static void RemoveMarks(ImageMark[] marks)
+        {
+            if (marks == null)
+            {
+                return;
+            }
+
+            lock (Marks)
+            {
+                foreach (var item in marks)
+                {
+                    Marks.Remove(item);
+                }
+            }
+        }
+
         public static void Clear()
         {
             lock (Classes)

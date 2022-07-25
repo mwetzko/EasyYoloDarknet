@@ -178,8 +178,8 @@ namespace Train
             mCurrentProjectFile = null;
             mCurrentProject = null;
 
-            imageEditor.ImageControl = null;
-            imageEditor.Invalidate(true);
+            ClearImageEditor();
+
             pnlImagesList.Controls.Clear();
             pnlClassesList.Controls.Clear();
 
@@ -190,6 +190,12 @@ namespace Train
             pnlClasses.Visible = false;
 
             ProjectState.Clear();
+        }
+
+        void ClearImageEditor()
+        {
+            imageEditor.ImageControl = null;
+            imageEditor.Invalidate(true);
         }
 
         void btnProjectOpen_Click(object sender, EventArgs e)
@@ -554,7 +560,15 @@ namespace Train
         {
             if (MessageBox.Show("Deleting an image will remove all marks of that image! Are you really sure?", FORM_NAME, MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
             {
-                pnlImagesList.Controls.Remove((Control)sender);
+                ImageControl ic = (ImageControl)sender;
+
+                if (imageEditor.ImageControl == ic)
+                {
+                    ClearImageEditor();
+                }
+
+                ProjectState.RemoveMarks(ic.Marks.ToArray());
+                pnlImagesList.Controls.Remove(ic);
                 EnsureUnsavedInfo();
             }
         }
