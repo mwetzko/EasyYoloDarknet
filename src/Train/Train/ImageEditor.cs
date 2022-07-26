@@ -173,7 +173,7 @@ namespace Train
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (mSelection.Width > 0 && mSelection.Height > 0)
+                    if (mSelection.Width != 0 && mSelection.Height != 0)
                     {
                         GetImageClassNameArgs args = new GetImageClassNameArgs();
 
@@ -181,6 +181,18 @@ namespace Train
 
                         if (args.ClassName != null)
                         {
+                            if (mSelection.Width < 0)
+                            {
+                                mSelection.X += mSelection.Width;
+                                mSelection.Width = -mSelection.Width;
+                            }
+
+                            if (mSelection.Height < 0)
+                            {
+                                mSelection.Y += mSelection.Height;
+                                mSelection.Height = -mSelection.Height;
+                            }
+
                             float w = (float)mSelection.Width / (float)mImageRect.Width;
                             float h = (float)mSelection.Height / (float)mImageRect.Height;
                             float x = ((mSelection.X - mImageRect.X) + (mSelection.Width / 2f)) / (float)mImageRect.Width;
