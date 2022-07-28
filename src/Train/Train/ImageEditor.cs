@@ -21,6 +21,7 @@ namespace Train
             InitializeComponent();
 
             bufferPanel.MouseWheel += bufferPanel_MouseWheel;
+            bufferPanel.KeyDown += bufferPanel_KeyDown;
 
             this.DoubleBuffered = true;
 
@@ -122,7 +123,7 @@ namespace Train
                     }
                 }
 
-                if (mSelection.Width != 0 && mSelection.Height != 0)
+                if (mHasSelection && mSelection.Width != 0 && mSelection.Height != 0)
                 {
                     Rectangle rect = new Rectangle();
 
@@ -157,6 +158,8 @@ namespace Train
 
         void bufferPanel_MouseDown(object sender, MouseEventArgs e)
         {
+            bufferPanel.Focus();
+
             mMouseLocation = e.Location;
 
             if (this.HasImage)
@@ -334,6 +337,16 @@ namespace Train
         public void OnClassNameChange()
         {
             bufferPanel.Invalidate();
+        }
+
+        void bufferPanel_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                mHasSelection = false;
+
+                bufferPanel.Invalidate();
+            }
         }
     }
 }
