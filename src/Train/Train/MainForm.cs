@@ -599,5 +599,10 @@ namespace Train
 
             e.ClassName = mSelectedClassName;
         }
+
+        void imageEditor_DeleteMarks(object sender, EventArgs e)
+        {
+            EnsureUnsavedInfo();
+        }
     }
 }

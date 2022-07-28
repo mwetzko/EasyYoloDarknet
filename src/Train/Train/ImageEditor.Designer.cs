@@ -61,6 +61,7 @@
             this.bufferPanel.TabIndex = 1;
             this.bufferPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.bufferPanel_Paint);
             this.bufferPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bufferPanel_MouseDown);
+            this.bufferPanel.MouseEnter += new System.EventHandler(this.bufferPanel_MouseEnter);
             this.bufferPanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.bufferPanel_MouseMove);
             this.bufferPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.bufferPanel_MouseUp);
             this.bufferPanel.Resize += new System.EventHandler(this.bufferPanel_Resize);

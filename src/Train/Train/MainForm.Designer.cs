@@ -346,6 +346,7 @@ namespace Train
             this.imageEditor.Size = new System.Drawing.Size(704, 583);
             this.imageEditor.TabIndex = 3;
             this.imageEditor.GetImageClassName += new System.EventHandler<Train.GetImageClassNameArgs>(this.imageEditor_GetImageClassName);
+            this.imageEditor.DeleteMarks += new System.EventHandler(this.imageEditor_DeleteMarks);
             // 
             // MainForm
             // 

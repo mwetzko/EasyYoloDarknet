@@ -50,7 +50,7 @@ namespace Train
         public event EventHandler Selected;
         public string ImageName { get; private set; }
         public Image Image => pbImage.Image;
-        public IEnumerable<ImageMark> Marks => mMarks;
+        public IList<ImageMark> Marks => mMarks;
 
         protected override void OnResize(EventArgs e)
         {

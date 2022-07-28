@@ -29,6 +29,7 @@ namespace Train
         }
 
         public event EventHandler<GetImageClassNameArgs> GetImageClassName;
+        public event EventHandler DeleteMarks;
 
         ImageControl mImageControl;
 
@@ -54,7 +55,7 @@ namespace Train
 
         Image Image => mImageControl?.Image;
 
-        IEnumerable<ImageMark> Marks => mImageControl?.Marks;
+        IList<ImageMark> Marks => mImageControl?.Marks;
 
         bool HasImage => this.Image != null;
 
@@ -118,7 +119,7 @@ namespace Train
 
                         if (item.DrawMouseOver)
                         {
-                            e.Graphics.DrawRectangle(p, RectangleF.Inflate(rect, 2, 2));
+                            e.Graphics.DrawRectangle(p, RectangleF.Inflate(rect, 1, 1));
                         }
                     }
                 }
@@ -347,6 +348,37 @@ namespace Train
 
                 bufferPanel.Invalidate();
             }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                if (this.Marks != null)
+                {
+                    bool refresh = false;
+
+                    for (int i = 0; i < this.Marks.Count; i++)
+                    {
+                        var rect = this.Marks[i].GetRectangle(mImageRect);
+
+                        bool contains = rect.Contains(mMouseLocation);
+
+                        if (contains)
+                        {
+                            this.Marks.RemoveAt(i--);
+                            refresh = true;
+                        }
+                    }
+
+                    if (refresh)
+                    {
+                        DeleteMarks?.Invoke(this, EventArgs.Empty);
+                        bufferPanel.Invalidate();
+                    }
+                }
+            }
+        }
+
+        void bufferPanel_MouseEnter(object sender, EventArgs e)
+        {
+            bufferPanel.Focus();
         }
     }
 }
