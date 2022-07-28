@@ -85,7 +85,8 @@ namespace Train
                 {
                     ProjectState.AddClass(item);
 
-                    var cc = new ClassControl(item) { Dock = DockStyle.Top };
+                    var cc = new ClassControl(item);
+                    cc.Dock = DockStyle.Top;
                     cc.UnsavedChanges += OnClassNameUnsavedChanges;
                     cc.DeleteClass += OnDeleteClass;
                     cc.BeforeRename += OnBeforeRenameClass;
@@ -111,7 +112,8 @@ namespace Train
 
                     ProjectState.AddMarks(item.Marks);
 
-                    var ic = new ImageControl(Path.Combine(path, item.Name), item.Marks) { Dock = DockStyle.Top };
+                    var ic = new ImageControl(Path.Combine(path, item.Name), item.Marks);
+                    ic.Dock = DockStyle.Top;
                     ic.UnsavedChanges += OnUnsavedChanges;
                     ic.DeleteImage += OnDeleteImage;
                     ic.Selected += OnImageSelection;
@@ -285,7 +287,8 @@ namespace Train
 
                 ProjectState.AddClass(cn);
 
-                var cc = new ClassControl(cn) { Dock = DockStyle.Top };
+                var cc = new ClassControl(cn);
+                cc.Dock = DockStyle.Top;
                 cc.UnsavedChanges += OnClassNameUnsavedChanges;
                 cc.DeleteClass += OnDeleteClass;
                 cc.BeforeRename += OnBeforeRenameClass;
@@ -543,7 +546,8 @@ namespace Train
                 return null;
             }
 
-            var ic = new ImageControl(path, null) { Dock = DockStyle.Top };
+            var ic = new ImageControl(path, null);
+            ic.Dock = DockStyle.Top;
             ic.UnsavedChanges += OnUnsavedChanges;
             ic.DeleteImage += OnDeleteImage;
             ic.Selected += OnImageSelection;

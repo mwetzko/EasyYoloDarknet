@@ -57,18 +57,21 @@ namespace Train
 
         void LoadImage()
         {
+            pnlMarksList.Controls.Clear();
+
             if (this.HasImage)
             {
                 pnlMarks.Visible = true;
                 pnlMarksList.AutoSize = true;
                 pnlMarksList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-                pnlMarksList.Controls.Clear();
 
                 if (this.Marks != null)
                 {
                     foreach (var item in this.Marks)
                     {
                         var mc = new MarkControl(item);
+                        mc.Dock = DockStyle.Top;
+                        mc.DeleteMark += Mc_DeleteMark;
                         mc.MouseEnter += Mc_MouseEnter;
                         mc.MouseLeave += Mc_MouseLeave;
                         pnlMarksList.Controls.Add(mc);
@@ -83,7 +86,6 @@ namespace Train
             else
             {
                 pnlMarks.Visible = false;
-                pnlMarksList.Controls.Clear();
             }
         }
 
@@ -199,8 +201,6 @@ namespace Train
 
         void bufferPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            bufferPanel.Focus();
-
             mMouseLocation = e.Location;
 
             if (this.HasImage)
@@ -249,6 +249,8 @@ namespace Train
                                 float y = ((mSelection.Y - mImageRect.Y) + (mSelection.Height / 2f)) / (float)mImageRect.Height;
 
                                 var mc = new MarkControl(this.ImageControl.AddImageMark(args.ClassName, new RectangleF(x, y, w, h)));
+                                mc.Dock = DockStyle.Top;
+                                mc.DeleteMark += Mc_DeleteMark;
                                 mc.MouseEnter += Mc_MouseEnter;
                                 mc.MouseLeave += Mc_MouseLeave;
                                 pnlMarksList.Controls.Add(mc);
@@ -446,6 +448,20 @@ namespace Train
             {
                 lbMarks.Text = $"Marks ({pnlMarksList.Controls.Count})";
             }
+        }
+
+        void Mc_DeleteMark(object sender, EventArgs e)
+        {
+            MarkControl mc = (MarkControl)sender;
+
+            int pos = this.Marks.IndexOf(mc.Mark);
+
+            ProjectState.RemoveMark(mc.Mark);
+            pnlMarksList.Controls.RemoveAt(pos);
+            this.Marks.RemoveAt(pos);
+
+            DeleteMarks?.Invoke(this, EventArgs.Empty);
+            bufferPanel.Invalidate();
         }
     }
 }

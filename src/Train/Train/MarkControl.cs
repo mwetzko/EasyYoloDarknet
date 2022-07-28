@@ -18,6 +18,8 @@ namespace Train
             this.UpdateState();
         }
 
+        public event EventHandler DeleteMark;
+
         public ImageMark Mark { get; private set; }
 
         protected override void OnResize(EventArgs e)
@@ -65,12 +67,24 @@ namespace Train
 
         void MarkControl_MouseEnter(object sender, EventArgs e)
         {
+            this.Focus();
+
             this.BackColor = SystemColors.ControlLight;
         }
 
         void MarkControl_MouseLeave(object sender, EventArgs e)
         {
             this.BackColor = SystemColors.Control;
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                DeleteMark?.Invoke(this, EventArgs.Empty);
+            }
         }
     }
 }
