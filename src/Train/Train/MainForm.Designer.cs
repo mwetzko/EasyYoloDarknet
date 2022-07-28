@@ -53,7 +53,7 @@ namespace Train
             this.tblAddImage = new System.Windows.Forms.TableLayoutPanel();
             this.btnImageFromClipboard = new System.Windows.Forms.Button();
             this.btnImageFromFile = new System.Windows.Forms.Button();
-            this.blImages = new System.Windows.Forms.Label();
+            this.lbImages = new System.Windows.Forms.Label();
             this.imageEditor = new Train.ImageEditor();
             this.pnlControls.SuspendLayout();
             this.flowProject.SuspendLayout();
@@ -208,6 +208,8 @@ namespace Train
             this.pnlClassesList.Name = "pnlClassesList";
             this.pnlClassesList.Size = new System.Drawing.Size(198, 388);
             this.pnlClassesList.TabIndex = 4;
+            this.pnlClassesList.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.ClassesListControlsChanged);
+            this.pnlClassesList.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.ClassesListControlsChanged);
             // 
             // pnlClassNamePadding
             // 
@@ -247,7 +249,7 @@ namespace Train
             this.pnlImages.BackColor = System.Drawing.Color.WhiteSmoke;
             this.pnlImages.Controls.Add(this.pnlImagesScroll);
             this.pnlImages.Controls.Add(this.pnlImagesAdd);
-            this.pnlImages.Controls.Add(this.blImages);
+            this.pnlImages.Controls.Add(this.lbImages);
             this.pnlImages.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlImages.Location = new System.Drawing.Point(704, 58);
             this.pnlImages.Name = "pnlImages";
@@ -272,6 +274,8 @@ namespace Train
             this.pnlImagesList.Name = "pnlImagesList";
             this.pnlImagesList.Size = new System.Drawing.Size(198, 388);
             this.pnlImagesList.TabIndex = 4;
+            this.pnlImagesList.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.ImageListControlsChanged);
+            this.pnlImagesList.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.ImageListControlsChanged);
             // 
             // pnlImagesAdd
             // 
@@ -326,16 +330,16 @@ namespace Train
             this.btnImageFromFile.UseVisualStyleBackColor = true;
             this.btnImageFromFile.Click += new System.EventHandler(this.btnImageFromFile_Click);
             // 
-            // blImages
+            // lbImages
             // 
-            this.blImages.Dock = System.Windows.Forms.DockStyle.Top;
-            this.blImages.Location = new System.Drawing.Point(1, 0);
-            this.blImages.Name = "blImages";
-            this.blImages.Size = new System.Drawing.Size(198, 28);
-            this.blImages.TabIndex = 3;
-            this.blImages.Text = "Images";
-            this.blImages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.blImages.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
+            this.lbImages.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbImages.Location = new System.Drawing.Point(1, 0);
+            this.lbImages.Name = "lbImages";
+            this.lbImages.Size = new System.Drawing.Size(198, 28);
+            this.lbImages.TabIndex = 3;
+            this.lbImages.Text = "Images";
+            this.lbImages.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbImages.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
             // 
             // imageEditor
             // 
@@ -398,7 +402,7 @@ namespace Train
         private Panel pnlClasses;
         private Panel pnlImages;
         private Label lbClasses;
-        private Label blImages;
+        private Label lbImages;
         private TextBox txtNewClass;
         private Panel pnlImagesList;
         private Panel pnlClassesList;

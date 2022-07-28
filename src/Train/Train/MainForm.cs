@@ -604,5 +604,29 @@ namespace Train
         {
             EnsureUnsavedInfo();
         }
+
+        void ClassesListControlsChanged(object sender, ControlEventArgs e)
+        {
+            if (pnlClassesList.Controls.Count == 0)
+            {
+                lbClasses.Text = "Classes";
+            }
+            else
+            {
+                lbClasses.Text = $"Classes ({pnlClassesList.Controls.Count})";
+            }
+        }
+
+        void ImageListControlsChanged(object sender, ControlEventArgs e)
+        {
+            if (pnlImagesList.Controls.Count == 0)
+            {
+                lbImages.Text = "Images";
+            }
+            else
+            {
+                lbImages.Text = $"Images ({pnlImagesList.Controls.Count})";
+            }
+        }
     }
 }
