@@ -28,20 +28,26 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.pnlStatus = new System.Windows.Forms.Panel();
             this.lbScale = new System.Windows.Forms.Label();
             this.bufferPanel = new Train.BufferPanel();
-            this.panel1.SuspendLayout();
+            this.pnlMarks = new System.Windows.Forms.Panel();
+            this.pnlMarksScroll = new System.Windows.Forms.Panel();
+            this.pnlMarksList = new System.Windows.Forms.Panel();
+            this.lbMarks = new System.Windows.Forms.Label();
+            this.pnlStatus.SuspendLayout();
+            this.pnlMarks.SuspendLayout();
+            this.pnlMarksScroll.SuspendLayout();
             this.SuspendLayout();
             // 
-            // panel1
+            // pnlStatus
             // 
-            this.panel1.Controls.Add(this.lbScale);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 278);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(548, 22);
-            this.panel1.TabIndex = 0;
+            this.pnlStatus.Controls.Add(this.lbScale);
+            this.pnlStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlStatus.Location = new System.Drawing.Point(0, 278);
+            this.pnlStatus.Name = "pnlStatus";
+            this.pnlStatus.Size = new System.Drawing.Size(458, 22);
+            this.pnlStatus.TabIndex = 0;
             // 
             // lbScale
             // 
@@ -57,7 +63,7 @@
             this.bufferPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bufferPanel.Location = new System.Drawing.Point(0, 0);
             this.bufferPanel.Name = "bufferPanel";
-            this.bufferPanel.Size = new System.Drawing.Size(548, 278);
+            this.bufferPanel.Size = new System.Drawing.Size(458, 278);
             this.bufferPanel.TabIndex = 1;
             this.bufferPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.bufferPanel_Paint);
             this.bufferPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bufferPanel_MouseDown);
@@ -66,24 +72,74 @@
             this.bufferPanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.bufferPanel_MouseUp);
             this.bufferPanel.Resize += new System.EventHandler(this.bufferPanel_Resize);
             // 
+            // pnlMarks
+            // 
+            this.pnlMarks.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.pnlMarks.Controls.Add(this.pnlMarksScroll);
+            this.pnlMarks.Controls.Add(this.lbMarks);
+            this.pnlMarks.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlMarks.Location = new System.Drawing.Point(458, 0);
+            this.pnlMarks.Name = "pnlMarks";
+            this.pnlMarks.Padding = new System.Windows.Forms.Padding(1, 0, 1, 0);
+            this.pnlMarks.Size = new System.Drawing.Size(90, 300);
+            this.pnlMarks.TabIndex = 5;
+            // 
+            // pnlMarksScroll
+            // 
+            this.pnlMarksScroll.AutoScroll = true;
+            this.pnlMarksScroll.Controls.Add(this.pnlMarksList);
+            this.pnlMarksScroll.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlMarksScroll.Location = new System.Drawing.Point(1, 28);
+            this.pnlMarksScroll.Name = "pnlMarksScroll";
+            this.pnlMarksScroll.Size = new System.Drawing.Size(88, 272);
+            this.pnlMarksScroll.TabIndex = 5;
+            // 
+            // pnlMarksList
+            // 
+            this.pnlMarksList.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlMarksList.Location = new System.Drawing.Point(0, 0);
+            this.pnlMarksList.Name = "pnlMarksList";
+            this.pnlMarksList.Size = new System.Drawing.Size(88, 134);
+            this.pnlMarksList.TabIndex = 0;
+            this.pnlMarksList.ControlAdded += new System.Windows.Forms.ControlEventHandler(this.ImageListControlsChanged);
+            this.pnlMarksList.ControlRemoved += new System.Windows.Forms.ControlEventHandler(this.ImageListControlsChanged);
+            // 
+            // lbMarks
+            // 
+            this.lbMarks.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lbMarks.Location = new System.Drawing.Point(1, 0);
+            this.lbMarks.Name = "lbMarks";
+            this.lbMarks.Size = new System.Drawing.Size(88, 28);
+            this.lbMarks.TabIndex = 4;
+            this.lbMarks.Text = "Marks";
+            this.lbMarks.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lbMarks.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
+            // 
             // ImageEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.bufferPanel);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.pnlStatus);
+            this.Controls.Add(this.pnlMarks);
             this.Name = "ImageEditor";
             this.Size = new System.Drawing.Size(548, 300);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.pnlStatus.ResumeLayout(false);
+            this.pnlStatus.PerformLayout();
+            this.pnlMarks.ResumeLayout(false);
+            this.pnlMarksScroll.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel pnlStatus;
         private BufferPanel bufferPanel;
         private System.Windows.Forms.Label lbScale;
+        private System.Windows.Forms.Panel pnlMarks;
+        private System.Windows.Forms.Panel pnlMarksScroll;
+        private System.Windows.Forms.Panel pnlMarksList;
+        private System.Windows.Forms.Label lbMarks;
     }
 }

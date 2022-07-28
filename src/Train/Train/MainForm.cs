@@ -302,9 +302,7 @@ namespace Train
 
         void PaintBottomLine(object sender, PaintEventArgs e)
         {
-            Control c = (Control)sender;
-
-            e.Graphics.DrawLine(Pens.Gray, 0, c.Height - 1, c.Width - 1, c.Height - 1);
+            e.Graphics.DrawBottomLine((Control)sender);
         }
 
         void OnClassNameUnsavedChanges(object sender, EventArgs e)

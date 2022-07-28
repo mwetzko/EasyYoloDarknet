@@ -180,7 +180,7 @@ namespace Train
             // 
             // pnlClasses
             // 
-            this.pnlClasses.BackColor = System.Drawing.Color.Gainsboro;
+            this.pnlClasses.BackColor = System.Drawing.Color.LightGray;
             this.pnlClasses.Controls.Add(this.pnlClassesScroll);
             this.pnlClasses.Controls.Add(this.pnlClassNamePadding);
             this.pnlClasses.Controls.Add(this.lbClasses);
@@ -246,7 +246,7 @@ namespace Train
             // 
             // pnlImages
             // 
-            this.pnlImages.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.pnlImages.BackColor = System.Drawing.Color.Gainsboro;
             this.pnlImages.Controls.Add(this.pnlImagesScroll);
             this.pnlImages.Controls.Add(this.pnlImagesAdd);
             this.pnlImages.Controls.Add(this.lbImages);

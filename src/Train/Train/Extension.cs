@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Train
 {
@@ -16,6 +17,11 @@ namespace Train
             }
 
             return false;
+        }
+
+        public static void DrawBottomLine(this Graphics g, Control c)
+        {
+            g.DrawLine(Pens.Gray, 0, c.Height - 1, c.Width - 1, c.Height - 1);
         }
 
         public static void DrawRectangle(this Graphics g, Pen p, RectangleF rect)

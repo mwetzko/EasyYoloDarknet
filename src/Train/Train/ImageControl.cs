@@ -107,7 +107,7 @@ namespace Train
             this.Select();
         }
 
-        public void AddImageMark(ClassName cn, RectangleF rect)
+        public ImageMark AddImageMark(ClassName cn, RectangleF rect)
         {
             // rect as relative center point and relative width / height as used by Yolo/Darknet
             var m = new ImageMark() { ClassId = cn.ID, CenterX = rect.X, CenterY = rect.Y, Width = rect.Width, Height = rect.Height, ClassName = cn };
@@ -117,6 +117,8 @@ namespace Train
             mMarks.Add(m);
 
             EnsureUnsavedChanges();
+
+            return m;
         }
     }
 }

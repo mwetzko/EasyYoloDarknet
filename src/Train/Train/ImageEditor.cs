@@ -20,6 +20,8 @@ namespace Train
         {
             InitializeComponent();
 
+            pnlMarks.Visible = false;
+
             bufferPanel.MouseWheel += bufferPanel_MouseWheel;
             bufferPanel.KeyDown += bufferPanel_KeyDown;
 
@@ -43,13 +45,7 @@ namespace Train
             {
                 mImageControl = value;
 
-                if (this.HasImage)
-                {
-                    CalcImageSize();
-                    CenterImage();
-
-                    bufferPanel.Invalidate();
-                }
+                LoadImage();
             }
         }
 
@@ -58,6 +54,50 @@ namespace Train
         IList<ImageMark> Marks => mImageControl?.Marks;
 
         bool HasImage => this.Image != null;
+
+        void LoadImage()
+        {
+            if (this.HasImage)
+            {
+                pnlMarks.Visible = true;
+                pnlMarksList.AutoSize = true;
+                pnlMarksList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                pnlMarksList.Controls.Clear();
+
+                if (this.Marks != null)
+                {
+                    foreach (var item in this.Marks)
+                    {
+                        var mc = new MarkControl(item);
+                        mc.MouseEnter += Mc_MouseEnter;
+                        mc.MouseLeave += Mc_MouseLeave;
+                        pnlMarksList.Controls.Add(mc);
+                    }
+                }
+
+                CalcImageSize();
+                CenterImage();
+
+                bufferPanel.Invalidate();
+            }
+            else
+            {
+                pnlMarks.Visible = false;
+                pnlMarksList.Controls.Clear();
+            }
+        }
+
+        void Mc_MouseLeave(object sender, EventArgs e)
+        {
+            ((MarkControl)sender).Mark.DrawHighlight = false;
+            bufferPanel.Invalidate();
+        }
+
+        void Mc_MouseEnter(object sender, EventArgs e)
+        {
+            ((MarkControl)sender).Mark.DrawHighlight = true;
+            bufferPanel.Invalidate();
+        }
 
         void UpdateScaleInfo()
         {
@@ -117,7 +157,7 @@ namespace Train
                     {
                         e.Graphics.DrawRectangle(p, rect);
 
-                        if (item.DrawMouseOver)
+                        if (item.DrawMouseOver || item.DrawHighlight)
                         {
                             e.Graphics.DrawRectangle(p, RectangleF.Inflate(rect, 1, 1));
                         }
@@ -208,7 +248,10 @@ namespace Train
                                 float x = ((mSelection.X - mImageRect.X) + (mSelection.Width / 2f)) / (float)mImageRect.Width;
                                 float y = ((mSelection.Y - mImageRect.Y) + (mSelection.Height / 2f)) / (float)mImageRect.Height;
 
-                                this.ImageControl.AddImageMark(args.ClassName, new RectangleF(x, y, w, h));
+                                var mc = new MarkControl(this.ImageControl.AddImageMark(args.ClassName, new RectangleF(x, y, w, h)));
+                                mc.MouseEnter += Mc_MouseEnter;
+                                mc.MouseLeave += Mc_MouseLeave;
+                                pnlMarksList.Controls.Add(mc);
                             }
                         }
 
@@ -338,6 +381,11 @@ namespace Train
         public void OnClassNameChange()
         {
             bufferPanel.Invalidate();
+
+            foreach (var item in pnlMarksList.Controls)
+            {
+                ((MarkControl)item).UpdateState();
+            }
         }
 
         void bufferPanel_KeyDown(object sender, KeyEventArgs e)
@@ -362,6 +410,8 @@ namespace Train
 
                         if (contains)
                         {
+                            ProjectState.RemoveMark(this.Marks[i]);
+                            pnlMarksList.Controls.RemoveAt(i);
                             this.Marks.RemoveAt(i--);
                             refresh = true;
                         }
@@ -379,6 +429,23 @@ namespace Train
         void bufferPanel_MouseEnter(object sender, EventArgs e)
         {
             bufferPanel.Focus();
+        }
+
+        void PaintBottomLine(object sender, PaintEventArgs e)
+        {
+            e.Graphics.DrawBottomLine((Control)sender);
+        }
+
+        void ImageListControlsChanged(object sender, ControlEventArgs e)
+        {
+            if (pnlMarksList.Controls.Count == 0)
+            {
+                lbMarks.Text = "Marks";
+            }
+            else
+            {
+                lbMarks.Text = $"Marks ({pnlMarksList.Controls.Count})";
+            }
         }
     }
 }

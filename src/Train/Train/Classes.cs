@@ -32,5 +32,7 @@ namespace Train
         public ClassName ClassName { get; set; }
         [JsonIgnore]
         public bool DrawMouseOver { get; set; }
+        [JsonIgnore]
+        public bool DrawHighlight { get; set; }
     }
 }
