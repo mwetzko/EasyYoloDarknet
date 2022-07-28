@@ -46,6 +46,7 @@ namespace Train
             btnRename.Visible = false;
             btnOk.Visible = true;
             btnCancel.Visible = true;
+            btnDelete.Visible = true;
         }
 
         void btnColorPicker_Click(object sender, EventArgs e)
@@ -112,6 +113,7 @@ namespace Train
             btnRename.Visible = true;
             btnOk.Visible = false;
             btnCancel.Visible = false;
+            btnDelete.Visible = false;
         }
 
         void EnsureUnsavedChanges()
