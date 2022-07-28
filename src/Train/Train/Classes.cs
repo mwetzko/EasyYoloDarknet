@@ -30,5 +30,7 @@ namespace Train
         public float Height { get; set; }
         [JsonIgnore]
         public ClassName ClassName { get; set; }
+        [JsonIgnore]
+        public bool DrawMouseOver { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace Train
         Point mMouseLocation;
         Rectangle mImageRect;
         bool mFromCenter;
+        bool mHasSelection;
         Rectangle mSelection;
         Font mScaleFont;
 
@@ -103,19 +104,21 @@ namespace Train
                 {
                     var c = Color.FromArgb(item.ClassName.Color);
 
-                    float w = mImageRect.Width * item.Width;
-                    float h = mImageRect.Height * item.Height;
-                    float x = mImageRect.X + ((mImageRect.Width * item.CenterX) - (w / 2));
-                    float y = mImageRect.Y + ((mImageRect.Height * item.CenterY) - (h / 2));
+                    var rect = item.GetRectangleF(mImageRect);
 
                     using (Brush b = new SolidBrush(c))
                     {
-                        e.Graphics.DrawString(item.ClassName.Name, mScaleFont, b, x, y);
+                        e.Graphics.DrawString(item.ClassName.Name, mScaleFont, b, rect.Location);
                     }
 
                     using (Pen p = new Pen(c))
                     {
-                        e.Graphics.DrawRectangle(p, x, y, w, h);
+                        e.Graphics.DrawRectangle(p, rect);
+
+                        if (item.DrawMouseOver)
+                        {
+                            e.Graphics.DrawRectangle(p, RectangleF.Inflate(rect, 2, 2));
+                        }
                     }
                 }
 
@@ -154,14 +157,13 @@ namespace Train
 
         void bufferPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            bufferPanel.Focus();
-
             mMouseLocation = e.Location;
 
             if (this.HasImage)
             {
-                if (e.Button == MouseButtons.Left)
+                if (e.Button == MouseButtons.Left && mImageRect.Contains(e.Location))
                 {
+                    mHasSelection = true;
                     mSelection = new Rectangle(mMouseLocation, new Size(0, 0));
                 }
             }
@@ -169,43 +171,48 @@ namespace Train
 
         void bufferPanel_MouseUp(object sender, MouseEventArgs e)
         {
-            if (bufferPanel.Focused && this.HasImage)
+            if (this.HasImage)
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (mSelection.Width != 0 && mSelection.Height != 0)
+                    if (mHasSelection)
                     {
-                        GetImageClassNameArgs args = new GetImageClassNameArgs();
+                        mHasSelection = false;
 
-                        GetImageClassName?.Invoke(this, args);
-
-                        if (args.ClassName != null)
+                        if (mSelection.Width != 0 && mSelection.Height != 0)
                         {
-                            if (mSelection.Width < 0)
+                            GetImageClassNameArgs args = new GetImageClassNameArgs();
+
+                            GetImageClassName?.Invoke(this, args);
+
+                            if (args.ClassName != null)
                             {
-                                mSelection.X += mSelection.Width;
-                                mSelection.Width = -mSelection.Width;
+                                if (mSelection.Width < 0)
+                                {
+                                    mSelection.X += mSelection.Width;
+                                    mSelection.Width = -mSelection.Width;
+                                }
+
+                                if (mSelection.Height < 0)
+                                {
+                                    mSelection.Y += mSelection.Height;
+                                    mSelection.Height = -mSelection.Height;
+                                }
+
+                                float w = (float)mSelection.Width / (float)mImageRect.Width;
+                                float h = (float)mSelection.Height / (float)mImageRect.Height;
+                                float x = ((mSelection.X - mImageRect.X) + (mSelection.Width / 2f)) / (float)mImageRect.Width;
+                                float y = ((mSelection.Y - mImageRect.Y) + (mSelection.Height / 2f)) / (float)mImageRect.Height;
+
+                                this.ImageControl.AddImageMark(args.ClassName, new RectangleF(x, y, w, h));
                             }
-
-                            if (mSelection.Height < 0)
-                            {
-                                mSelection.Y += mSelection.Height;
-                                mSelection.Height = -mSelection.Height;
-                            }
-
-                            float w = (float)mSelection.Width / (float)mImageRect.Width;
-                            float h = (float)mSelection.Height / (float)mImageRect.Height;
-                            float x = ((mSelection.X - mImageRect.X) + (mSelection.Width / 2f)) / (float)mImageRect.Width;
-                            float y = ((mSelection.Y - mImageRect.Y) + (mSelection.Height / 2f)) / (float)mImageRect.Height;
-
-                            this.ImageControl.AddImageMark(args.ClassName, new RectangleF(x, y, w, h));
                         }
+
+                        mSelection.Width = 0;
+                        mSelection.Height = 0;
+
+                        bufferPanel.Invalidate();
                     }
-
-                    mSelection.Width = 0;
-                    mSelection.Height = 0;
-
-                    bufferPanel.Invalidate();
                 }
             }
 
@@ -214,14 +221,17 @@ namespace Train
 
         void bufferPanel_MouseMove(object sender, MouseEventArgs e)
         {
-            if (bufferPanel.Focused && this.HasImage)
+            if (this.HasImage)
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    mSelection.Width = e.X - mSelection.Location.X;
-                    mSelection.Height = e.Y - mSelection.Location.Y;
+                    if (mHasSelection)
+                    {
+                        mSelection.Width = e.X - mSelection.Location.X;
+                        mSelection.Height = e.Y - mSelection.Location.Y;
 
-                    bufferPanel.Invalidate();
+                        bufferPanel.Invalidate();
+                    }
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
@@ -229,6 +239,28 @@ namespace Train
                     mImageRect.Y += (e.Y - mMouseLocation.Y);
 
                     bufferPanel.Invalidate();
+                }
+                else if (this.Marks != null)
+                {
+                    bool refresh = false;
+
+                    foreach (var item in this.Marks)
+                    {
+                        var rect = item.GetRectangle(mImageRect);
+
+                        bool contains = rect.Contains(e.Location);
+
+                        if (contains != item.DrawMouseOver)
+                        {
+                            item.DrawMouseOver = contains;
+                            refresh = true;
+                        }
+                    }
+
+                    if (refresh)
+                    {
+                        bufferPanel.Invalidate();
+                    }
                 }
             }
 
