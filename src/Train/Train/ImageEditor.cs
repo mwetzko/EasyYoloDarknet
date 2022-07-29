@@ -295,7 +295,7 @@ namespace Train
 
                     foreach (var item in this.Marks)
                     {
-                        var rect = item.GetRectangle(mImageRect);
+                        var rect = item.GetRectangleF(mImageRect);
 
                         bool contains = rect.Contains(e.Location);
 
@@ -406,7 +406,7 @@ namespace Train
 
                     for (int i = 0; i < this.Marks.Count; i++)
                     {
-                        var rect = this.Marks[i].GetRectangle(mImageRect);
+                        var rect = this.Marks[i].GetRectangleF(mImageRect);
 
                         bool contains = rect.Contains(mMouseLocation);
 
