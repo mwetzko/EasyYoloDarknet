@@ -9,12 +9,13 @@ namespace Train
     {
         int mScale = 100;
         int mScaleMultiplier = 1;
-        Point mMouseLocation;
         Rectangle mImageRect;
         bool mFromCenter;
         bool mHasSelection;
         Rectangle mSelection;
         Font mScaleFont;
+        bool mHasCtrl;
+        MouseEventArgs mLastMouseEvent;
 
         public ImageEditor()
         {
@@ -24,6 +25,7 @@ namespace Train
 
             bufferPanel.MouseWheel += bufferPanel_MouseWheel;
             bufferPanel.KeyDown += bufferPanel_KeyDown;
+            bufferPanel.KeyUp += bufferPanel_KeyUp;
 
             this.DoubleBuffered = true;
 
@@ -126,10 +128,10 @@ namespace Train
 
         void CalcRelativeImagePos(Size formerImageSize)
         {
-            if (mImageRect.Contains(mMouseLocation))
+            if (mImageRect.Contains(mLastMouseEvent.Location))
             {
-                mImageRect.X = mMouseLocation.X - (int)(((mMouseLocation.X - mImageRect.X) / (float)formerImageSize.Width) * mImageRect.Width);
-                mImageRect.Y = mMouseLocation.Y - (int)(((mMouseLocation.Y - mImageRect.Y) / (float)formerImageSize.Height) * mImageRect.Height);
+                mImageRect.X = mLastMouseEvent.X - (int)(((mLastMouseEvent.X - mImageRect.X) / (float)formerImageSize.Width) * mImageRect.Width);
+                mImageRect.Y = mLastMouseEvent.Y - (int)(((mLastMouseEvent.Y - mImageRect.Y) / (float)formerImageSize.Height) * mImageRect.Height);
             }
             else
             {
@@ -201,20 +203,22 @@ namespace Train
 
         void bufferPanel_MouseDown(object sender, MouseEventArgs e)
         {
-            mMouseLocation = e.Location;
+            mLastMouseEvent = e;
 
-            if (this.HasImage)
+            if (!mHasCtrl && this.HasImage)
             {
                 if (e.Button == MouseButtons.Left && mImageRect.Contains(e.Location))
                 {
                     mHasSelection = true;
-                    mSelection = new Rectangle(mMouseLocation, new Size(0, 0));
+                    mSelection = new Rectangle(e.Location, new Size(0, 0));
                 }
             }
         }
 
         void bufferPanel_MouseUp(object sender, MouseEventArgs e)
         {
+            mLastMouseEvent = e;
+
             if (this.HasImage)
             {
                 if (e.Button == MouseButtons.Left)
@@ -264,12 +268,14 @@ namespace Train
                     }
                 }
             }
-
-            mMouseLocation = e.Location;
         }
 
         void bufferPanel_MouseMove(object sender, MouseEventArgs e)
         {
+            var ev = mLastMouseEvent;
+
+            mLastMouseEvent = e;
+
             if (this.HasImage)
             {
                 if (e.Button == MouseButtons.Left)
@@ -284,8 +290,8 @@ namespace Train
                 }
                 else if (e.Button == MouseButtons.Right)
                 {
-                    mImageRect.X += (e.X - mMouseLocation.X);
-                    mImageRect.Y += (e.Y - mMouseLocation.Y);
+                    mImageRect.X += (e.X - ev.X);
+                    mImageRect.Y += (e.Y - ev.Y);
 
                     bufferPanel.Invalidate();
                 }
@@ -297,8 +303,14 @@ namespace Train
                     foreach (var item in this.Marks)
                     {
                         var rect = item.GetRectangleF(mImageRect);
+                        RectangleF? rect2 = null;
 
-                        bool contains = rect.Contains(e.Location);
+                        if (!resz.HasValue && mHasCtrl)
+                        {
+                            rect2 = RectangleF.Inflate(rect, 4, 4);
+                        }
+
+                        bool contains = (rect2 ?? rect).Contains(e.Location);
 
                         if (contains != item.DrawMouseOver)
                         {
@@ -306,24 +318,17 @@ namespace Train
                             refresh = true;
                         }
 
-                        if (!resz.HasValue)
+                        if (!resz.HasValue && mHasCtrl && contains)
                         {
-                            var rect2 = RectangleF.Inflate(rect, 4, 4);
+                            var rect3 = RectangleF.Inflate(rect, -4, -4);
 
-                            contains = rect2.Contains(e.Location);
-
-                            if (contains)
+                            if (rect3.Width > 0 && rect3.Height > 0)
                             {
-                                var rect3 = RectangleF.Inflate(rect, -4, -4);
+                                contains = rect3.Contains(e.Location);
 
-                                if (rect3.Width > 0 && rect3.Height > 0)
+                                if (!contains)
                                 {
-                                    contains = rect3.Contains(e.Location);
-
-                                    if (!contains)
-                                    {
-                                        resz = rect;
-                                    }
+                                    resz = rect;
                                 }
                             }
                         }
@@ -344,8 +349,6 @@ namespace Train
                     }
                 }
             }
-
-            mMouseLocation = e.Location;
         }
 
         void bufferPanel_MouseWheel(object sender, MouseEventArgs e)
@@ -426,13 +429,16 @@ namespace Train
         {
             if (e.KeyCode == Keys.Escape)
             {
-                mHasSelection = false;
+                if (!mHasCtrl)
+                {
+                    mHasSelection = false;
 
-                bufferPanel.Invalidate();
+                    bufferPanel.Invalidate();
+                }
             }
             else if (e.KeyCode == Keys.Delete)
             {
-                if (this.Marks != null)
+                if (!mHasCtrl && this.Marks != null)
                 {
                     bool refresh = false;
 
@@ -440,7 +446,7 @@ namespace Train
                     {
                         var rect = this.Marks[i].GetRectangleF(mImageRect);
 
-                        bool contains = rect.Contains(mMouseLocation);
+                        bool contains = rect.Contains(mLastMouseEvent.Location);
 
                         if (contains)
                         {
@@ -456,6 +462,31 @@ namespace Train
                         DeleteMarks?.Invoke(this, EventArgs.Empty);
                         bufferPanel.Invalidate();
                     }
+                }
+            }
+            else if (e.KeyCode == Keys.ControlKey)
+            {
+                if (!mHasCtrl && !mHasSelection)
+                {
+                    mHasCtrl = true;
+
+                    if (mLastMouseEvent != null)
+                    {
+                        bufferPanel_MouseMove(bufferPanel, mLastMouseEvent);
+                    }
+                }
+            }
+        }
+
+        void bufferPanel_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.ControlKey)
+            {
+                mHasCtrl = false;
+
+                if (mLastMouseEvent != null)
+                {
+                    bufferPanel_MouseMove(bufferPanel, mLastMouseEvent);
                 }
             }
         }
