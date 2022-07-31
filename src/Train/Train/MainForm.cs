@@ -31,7 +31,7 @@ namespace Train
             pnlImages.Visible = false;
             pnlClasses.Visible = false;
 
-            MainForm_Resize(this, EventArgs.Empty);
+            OnResize(EventArgs.Empty);
         }
 
         void EnsureFormName()
@@ -263,8 +263,10 @@ namespace Train
             }
         }
 
-        void MainForm_Resize(object sender, EventArgs e)
+        protected override void OnResize(EventArgs e)
         {
+            base.OnResize(e);
+
             pnlControls.Height = flowProject.Height;
         }
 
@@ -628,6 +630,18 @@ namespace Train
             else
             {
                 lbImages.Text = $"Images ({pnlImagesList.Controls.Count})";
+            }
+        }
+
+        protected override void OnHelpRequested(HelpEventArgs e)
+        {
+            base.OnHelpRequested(e);
+
+            e.Handled = true;
+
+            using (var h = new HelpForm())
+            {
+                h.ShowDialog();
             }
         }
     }

@@ -365,7 +365,6 @@ namespace Train
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Train";
-            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.pnlControls.ResumeLayout(false);
             this.pnlControls.PerformLayout();
             this.flowProject.ResumeLayout(false);

@@ -28,31 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlStatus = new System.Windows.Forms.Panel();
             this.lbScale = new System.Windows.Forms.Label();
             this.bufferPanel = new Train.BufferPanel();
             this.pnlMarks = new System.Windows.Forms.Panel();
             this.pnlMarksScroll = new System.Windows.Forms.Panel();
             this.pnlMarksList = new System.Windows.Forms.Panel();
             this.lbMarks = new System.Windows.Forms.Label();
-            this.pnlStatus.SuspendLayout();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.lbF1 = new System.Windows.Forms.Label();
             this.pnlMarks.SuspendLayout();
             this.pnlMarksScroll.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // pnlStatus
-            // 
-            this.pnlStatus.Controls.Add(this.lbScale);
-            this.pnlStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlStatus.Location = new System.Drawing.Point(0, 278);
-            this.pnlStatus.Name = "pnlStatus";
-            this.pnlStatus.Size = new System.Drawing.Size(458, 22);
-            this.pnlStatus.TabIndex = 0;
             // 
             // lbScale
             // 
             this.lbScale.AutoSize = true;
-            this.lbScale.Location = new System.Drawing.Point(3, 3);
+            this.lbScale.Location = new System.Drawing.Point(70, 5);
+            this.lbScale.Margin = new System.Windows.Forms.Padding(5);
             this.lbScale.Name = "lbScale";
             this.lbScale.Size = new System.Drawing.Size(34, 15);
             this.lbScale.TabIndex = 0;
@@ -63,7 +56,7 @@
             this.bufferPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.bufferPanel.Location = new System.Drawing.Point(0, 0);
             this.bufferPanel.Name = "bufferPanel";
-            this.bufferPanel.Size = new System.Drawing.Size(458, 278);
+            this.bufferPanel.Size = new System.Drawing.Size(458, 275);
             this.bufferPanel.TabIndex = 1;
             this.bufferPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.bufferPanel_Paint);
             this.bufferPanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.bufferPanel_MouseDown);
@@ -115,31 +108,60 @@
             this.lbMarks.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lbMarks.Paint += new System.Windows.Forms.PaintEventHandler(this.PaintBottomLine);
             // 
+            // tableLayoutPanel1
+            // 
+            this.tableLayoutPanel1.AutoSize = true;
+            this.tableLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.tableLayoutPanel1.ColumnCount = 3;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Controls.Add(this.lbScale, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.lbF1, 0, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 275);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(458, 25);
+            this.tableLayoutPanel1.TabIndex = 6;
+            // 
+            // lbF1
+            // 
+            this.lbF1.AutoSize = true;
+            this.lbF1.Location = new System.Drawing.Point(5, 5);
+            this.lbF1.Margin = new System.Windows.Forms.Padding(5);
+            this.lbF1.Name = "lbF1";
+            this.lbF1.Size = new System.Drawing.Size(55, 15);
+            this.lbF1.TabIndex = 1;
+            this.lbF1.Text = "F1 (Help)";
+            // 
             // ImageEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.bufferPanel);
-            this.Controls.Add(this.pnlStatus);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.pnlMarks);
             this.Name = "ImageEditor";
             this.Size = new System.Drawing.Size(548, 300);
-            this.pnlStatus.ResumeLayout(false);
-            this.pnlStatus.PerformLayout();
             this.pnlMarks.ResumeLayout(false);
             this.pnlMarksScroll.ResumeLayout(false);
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel pnlStatus;
         private BufferPanel bufferPanel;
         private System.Windows.Forms.Label lbScale;
         private System.Windows.Forms.Panel pnlMarks;
         private System.Windows.Forms.Panel pnlMarksScroll;
         private System.Windows.Forms.Panel pnlMarksList;
         private System.Windows.Forms.Label lbMarks;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Label lbF1;
     }
 }
