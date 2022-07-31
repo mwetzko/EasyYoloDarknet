@@ -35,11 +35,11 @@
             this.lbRmbDrag = new System.Windows.Forms.Label();
             this.lbRmbDragText = new System.Windows.Forms.Label();
             this.lbMwScroll = new System.Windows.Forms.Label();
-            this.lbMwText = new System.Windows.Forms.Label();
-            this.lbMmDel = new System.Windows.Forms.Label();
-            this.lbMmDelText = new System.Windows.Forms.Label();
             this.lbLmbDragEsc = new System.Windows.Forms.Label();
             this.lbLmbDragEscText = new System.Windows.Forms.Label();
+            this.lbMmDel = new System.Windows.Forms.Label();
+            this.lbMwText = new System.Windows.Forms.Label();
+            this.lbMmDelText = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -135,36 +135,6 @@
             this.lbMwScroll.TabIndex = 5;
             this.lbMwScroll.Text = "Mouse Wheel";
             // 
-            // lbMwText
-            // 
-            this.lbMwText.AutoSize = true;
-            this.lbMwText.Location = new System.Drawing.Point(187, 110);
-            this.lbMwText.Margin = new System.Windows.Forms.Padding(5);
-            this.lbMwText.Name = "lbMwText";
-            this.lbMwText.Size = new System.Drawing.Size(111, 15);
-            this.lbMwText.TabIndex = 6;
-            this.lbMwText.Text = "Zoom Image in/out";
-            // 
-            // lbMmDel
-            // 
-            this.lbMmDel.AutoSize = true;
-            this.lbMmDel.Location = new System.Drawing.Point(6, 136);
-            this.lbMmDel.Margin = new System.Windows.Forms.Padding(5);
-            this.lbMmDel.Name = "lbMmDel";
-            this.lbMmDel.Size = new System.Drawing.Size(132, 15);
-            this.lbMmDel.TabIndex = 7;
-            this.lbMmDel.Text = "Mouse Over Mark + Del";
-            // 
-            // lbMmDelText
-            // 
-            this.lbMmDelText.AutoSize = true;
-            this.lbMmDelText.Location = new System.Drawing.Point(187, 136);
-            this.lbMmDelText.Margin = new System.Windows.Forms.Padding(5);
-            this.lbMmDelText.Name = "lbMmDelText";
-            this.lbMmDelText.Size = new System.Drawing.Size(70, 15);
-            this.lbMmDelText.TabIndex = 8;
-            this.lbMmDelText.Text = "Delete Mark";
-            // 
             // lbLmbDragEsc
             // 
             this.lbLmbDragEsc.AutoSize = true;
@@ -181,9 +151,39 @@
             this.lbLmbDragEscText.Location = new System.Drawing.Point(187, 58);
             this.lbLmbDragEscText.Margin = new System.Windows.Forms.Padding(5);
             this.lbLmbDragEscText.Name = "lbLmbDragEscText";
-            this.lbLmbDragEscText.Size = new System.Drawing.Size(121, 15);
+            this.lbLmbDragEscText.Size = new System.Drawing.Size(157, 15);
             this.lbLmbDragEscText.TabIndex = 10;
-            this.lbLmbDragEscText.Text = "Cancel Mark Creation";
+            this.lbLmbDragEscText.Text = "Cancel Image Mark Creation";
+            // 
+            // lbMmDel
+            // 
+            this.lbMmDel.AutoSize = true;
+            this.lbMmDel.Location = new System.Drawing.Point(6, 136);
+            this.lbMmDel.Margin = new System.Windows.Forms.Padding(5);
+            this.lbMmDel.Name = "lbMmDel";
+            this.lbMmDel.Size = new System.Drawing.Size(132, 15);
+            this.lbMmDel.TabIndex = 7;
+            this.lbMmDel.Text = "Mouse Over Mark + Del";
+            // 
+            // lbMwText
+            // 
+            this.lbMwText.AutoSize = true;
+            this.lbMwText.Location = new System.Drawing.Point(187, 110);
+            this.lbMwText.Margin = new System.Windows.Forms.Padding(5);
+            this.lbMwText.Name = "lbMwText";
+            this.lbMwText.Size = new System.Drawing.Size(111, 15);
+            this.lbMwText.TabIndex = 6;
+            this.lbMwText.Text = "Zoom Image in/out";
+            // 
+            // lbMmDelText
+            // 
+            this.lbMmDelText.AutoSize = true;
+            this.lbMmDelText.Location = new System.Drawing.Point(187, 136);
+            this.lbMmDelText.Margin = new System.Windows.Forms.Padding(5);
+            this.lbMmDelText.Name = "lbMmDelText";
+            this.lbMmDelText.Size = new System.Drawing.Size(70, 15);
+            this.lbMmDelText.TabIndex = 8;
+            this.lbMmDelText.Text = "Delete Mark";
             // 
             // HelpForm
             // 
