@@ -292,6 +292,7 @@ namespace Train
                 else if (this.Marks != null)
                 {
                     bool refresh = false;
+                    RectangleF? resz = null;
 
                     foreach (var item in this.Marks)
                     {
@@ -304,6 +305,37 @@ namespace Train
                             item.DrawMouseOver = contains;
                             refresh = true;
                         }
+
+                        if (!resz.HasValue)
+                        {
+                            var rect2 = RectangleF.Inflate(rect, 4, 4);
+
+                            contains = rect2.Contains(e.Location);
+
+                            if (contains)
+                            {
+                                var rect3 = RectangleF.Inflate(rect, -4, -4);
+
+                                if (rect3.Width > 0 && rect3.Height > 0)
+                                {
+                                    contains = rect3.Contains(e.Location);
+
+                                    if (!contains)
+                                    {
+                                        resz = rect;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (resz.HasValue)
+                    {
+                        this.Cursor = Helper.GetResizeCursor(resz.Value, e.Location) ?? Cursors.Default;
+                    }
+                    else if (this.Cursor != Cursors.Default)
+                    {
+                        this.Cursor = Cursors.Default;
                     }
 
                     if (refresh)
