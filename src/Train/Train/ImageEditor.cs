@@ -11,7 +11,7 @@ namespace Train
         int mScaleMultiplier = 1;
         Rectangle mImageRect;
         bool mFromCenter;
-        bool mHasSelection;
+        Point? mSelectionStart;
         Rectangle mSelection;
         Font mScaleFont;
         bool mHasCtrl;
@@ -187,35 +187,9 @@ namespace Train
                     }
                 }
 
-                if (mHasSelection && mSelection.Width != 0 && mSelection.Height != 0)
+                if (mSelectionStart.HasValue && mSelection.Width > 0 && mSelection.Height > 0)
                 {
-                    Rectangle rect = new Rectangle();
-
-                    if (mSelection.Width > 0)
-                    {
-                        rect.X = mSelection.X;
-                        rect.Width = mSelection.Width;
-                    }
-                    else
-                    {
-                        rect.X = mSelection.X + mSelection.Width;
-                        rect.Width = -mSelection.Width;
-                    }
-
-                    if (mSelection.Height > 0)
-                    {
-                        rect.Y = mSelection.Y;
-                        rect.Height = mSelection.Height;
-                    }
-                    else
-                    {
-                        rect.Y = mSelection.Y + mSelection.Height;
-                        rect.Height = -mSelection.Height;
-                    }
-
-                    rect = Rectangle.Intersect(mImageRect, rect);
-
-                    ControlPaint.DrawFocusRectangle(e.Graphics, rect);
+                    ControlPaint.DrawFocusRectangle(e.Graphics, mSelection);
                 }
             }
         }
@@ -230,7 +204,7 @@ namespace Train
                 {
                     if (!mHasCtrl)
                     {
-                        mHasSelection = true;
+                        mSelectionStart = e.Location;
                         mSelection = new Rectangle(e.Location, new Size(0, 0));
                     }
                 }
@@ -245,11 +219,11 @@ namespace Train
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (mHasSelection)
+                    if (mSelectionStart.HasValue)
                     {
-                        mHasSelection = false;
+                        mSelectionStart = null;
 
-                        if (mSelection.Width != 0 && mSelection.Height != 0)
+                        if (mSelection.Width > 0 && mSelection.Height > 0)
                         {
                             GetImageClassNameArgs args = new GetImageClassNameArgs();
 
@@ -257,18 +231,6 @@ namespace Train
 
                             if (args.ClassName != null)
                             {
-                                if (mSelection.Width < 0)
-                                {
-                                    mSelection.X += mSelection.Width;
-                                    mSelection.Width = -mSelection.Width;
-                                }
-
-                                if (mSelection.Height < 0)
-                                {
-                                    mSelection.Y += mSelection.Height;
-                                    mSelection.Height = -mSelection.Height;
-                                }
-
                                 var mc = new MarkControl(this.ImageControl.AddImageMark(args.ClassName, CalcRelativeRect(mSelection)));
                                 mc.Dock = DockStyle.Top;
                                 mc.DeleteMark += Mc_DeleteMark;
@@ -277,9 +239,6 @@ namespace Train
                                 pnlMarksList.Controls.Add(mc);
                             }
                         }
-
-                        mSelection.Width = 0;
-                        mSelection.Height = 0;
 
                         bufferPanel.Invalidate();
                     }
@@ -318,10 +277,24 @@ namespace Train
                             ResizeMarks?.Invoke(this, EventArgs.Empty);
                         }
                     }
-                    else if (mHasSelection)
+                    else if (mSelectionStart.HasValue)
                     {
-                        mSelection.Width = e.X - mSelection.Location.X;
-                        mSelection.Height = e.Y - mSelection.Location.Y;
+                        mSelection.Width = e.X - mSelectionStart.Value.X;
+                        mSelection.Height = e.Y - mSelectionStart.Value.Y;
+
+                        if (mSelection.Width < 0)
+                        {
+                            mSelection.X = e.X;
+                            mSelection.Width = -mSelection.Width;
+                        }
+
+                        if (mSelection.Height < 0)
+                        {
+                            mSelection.Y = e.Y;
+                            mSelection.Height = -mSelection.Height;
+                        }
+
+                        mSelection.Intersect(mImageRect);
 
                         bufferPanel.Invalidate();
                     }
@@ -472,7 +445,7 @@ namespace Train
             {
                 if (!mHasCtrl)
                 {
-                    mHasSelection = false;
+                    mSelectionStart = null;
 
                     bufferPanel.Invalidate();
                 }
@@ -507,7 +480,7 @@ namespace Train
             }
             else if (e.KeyCode == Keys.ControlKey)
             {
-                if (!mHasCtrl && !mHasSelection)
+                if (!mHasCtrl && !mSelectionStart.HasValue)
                 {
                     mHasCtrl = true;
 
