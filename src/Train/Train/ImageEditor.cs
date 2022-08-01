@@ -16,6 +16,8 @@ namespace Train
         Font mScaleFont;
         bool mHasCtrl;
         MouseEventArgs mLastMouseEvent;
+        ImageMark mLastResizeMark;
+        LTRB mResizeMultipliers;
 
         public ImageEditor()
         {
@@ -34,6 +36,7 @@ namespace Train
 
         public event EventHandler<GetImageClassNameArgs> GetImageClassName;
         public event EventHandler DeleteMarks;
+        public event EventHandler ResizeMarks;
 
         ImageControl mImageControl;
 
@@ -140,6 +143,22 @@ namespace Train
             }
         }
 
+        RectangleF CalcRelativeRect(Rectangle rect)
+        {
+            return CalcRelativeRect(new RectangleF(rect.X, rect.Y, rect.Width, rect.Height));
+        }
+
+        RectangleF CalcRelativeRect(RectangleF rect)
+        {
+            return new RectangleF()
+            {
+                Width = rect.Width / mImageRect.Width,
+                Height = rect.Height / mImageRect.Height,
+                X = ((rect.X - mImageRect.X) + (rect.Width / 2f)) / mImageRect.Width,
+                Y = ((rect.Y - mImageRect.Y) + (rect.Height / 2f)) / mImageRect.Height
+            };
+        }
+
         void bufferPanel_Paint(object sender, PaintEventArgs e)
         {
             if (this.HasImage)
@@ -205,12 +224,15 @@ namespace Train
         {
             mLastMouseEvent = e;
 
-            if (!mHasCtrl && this.HasImage)
+            if (this.HasImage)
             {
                 if (e.Button == MouseButtons.Left && mImageRect.Contains(e.Location))
                 {
-                    mHasSelection = true;
-                    mSelection = new Rectangle(e.Location, new Size(0, 0));
+                    if (!mHasCtrl)
+                    {
+                        mHasSelection = true;
+                        mSelection = new Rectangle(e.Location, new Size(0, 0));
+                    }
                 }
             }
         }
@@ -247,12 +269,7 @@ namespace Train
                                     mSelection.Height = -mSelection.Height;
                                 }
 
-                                float w = (float)mSelection.Width / (float)mImageRect.Width;
-                                float h = (float)mSelection.Height / (float)mImageRect.Height;
-                                float x = ((mSelection.X - mImageRect.X) + (mSelection.Width / 2f)) / (float)mImageRect.Width;
-                                float y = ((mSelection.Y - mImageRect.Y) + (mSelection.Height / 2f)) / (float)mImageRect.Height;
-
-                                var mc = new MarkControl(this.ImageControl.AddImageMark(args.ClassName, new RectangleF(x, y, w, h)));
+                                var mc = new MarkControl(this.ImageControl.AddImageMark(args.ClassName, CalcRelativeRect(mSelection)));
                                 mc.Dock = DockStyle.Top;
                                 mc.DeleteMark += Mc_DeleteMark;
                                 mc.MouseEnter += Mc_MouseEnter;
@@ -280,7 +297,28 @@ namespace Train
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    if (mHasSelection)
+                    if (mHasCtrl)
+                    {
+                        if (mLastResizeMark != null)
+                        {
+                            var x = (e.X - ev.X);
+                            var y = (e.Y - ev.Y);
+
+                            var rect = mLastResizeMark.GetRectangleF(mImageRect).ToLTRB();
+
+                            rect.Left += (mResizeMultipliers.Left * x);
+                            rect.Top += (mResizeMultipliers.Top * y);
+                            rect.Right += (mResizeMultipliers.Right * x);
+                            rect.Bottom += (mResizeMultipliers.Bottom * y);
+
+                            mLastResizeMark.Update(CalcRelativeRect(rect.ToRectangleF()));
+
+                            bufferPanel.Invalidate();
+
+                            ResizeMarks?.Invoke(this, EventArgs.Empty);
+                        }
+                    }
+                    else if (mHasSelection)
                     {
                         mSelection.Width = e.X - mSelection.Location.X;
                         mSelection.Height = e.Y - mSelection.Location.Y;
@@ -328,6 +366,7 @@ namespace Train
 
                                 if (!contains)
                                 {
+                                    mLastResizeMark = item;
                                     resz = rect;
                                 }
                             }
@@ -336,10 +375,12 @@ namespace Train
 
                     if (resz.HasValue)
                     {
-                        this.Cursor = Helper.GetResizeCursor(resz.Value, e.Location) ?? Cursors.Default;
+                        this.Cursor = Helper.GetResizeCursor(resz.Value, e.Location, out mResizeMultipliers) ?? Cursors.Default;
                     }
                     else if (this.Cursor != Cursors.Default)
                     {
+                        mLastResizeMark = null;
+                        mResizeMultipliers = default;
                         this.Cursor = Cursors.Default;
                     }
 

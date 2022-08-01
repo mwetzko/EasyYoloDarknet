@@ -34,5 +34,15 @@ namespace Train
         public bool DrawMouseOver { get; set; }
         [JsonIgnore]
         public bool DrawHighlight { get; set; }
+        [JsonIgnore]
+        public MarkControl Control { get; set; }
+    }
+
+    struct LTRB
+    {
+        public float Left;
+        public float Top;
+        public float Right;
+        public float Bottom;
     }
 }

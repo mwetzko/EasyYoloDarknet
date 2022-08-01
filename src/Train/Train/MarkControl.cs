@@ -13,6 +13,7 @@ namespace Train
 
         public MarkControl(ImageMark mark)
         {
+            mark.Control = this;
             InitializeComponent();
             this.Mark = mark;
             this.UpdateState();

@@ -5,16 +5,22 @@ namespace Train
 {
     static class Helper
     {
-        public static Cursor GetResizeCursor(RectangleF rect, Point mouseLocation)
+        public static Cursor GetResizeCursor(RectangleF rect, Point mouseLocation, out LTRB rmp)
         {
+            rmp = default;
+
             if (IsBetween(rect.Left, mouseLocation.X))
             {
+                rmp.Left = 1;
+
                 if (IsBetween(rect.Top, mouseLocation.Y))
                 {
+                    rmp.Top = 1;
                     return Cursors.SizeNWSE;
                 }
                 else if (IsBetween(rect.Bottom, mouseLocation.Y))
                 {
+                    rmp.Bottom = 1;
                     return Cursors.SizeNESW;
                 }
                 else
@@ -24,12 +30,16 @@ namespace Train
             }
             else if (IsBetween(rect.Right, mouseLocation.X))
             {
+                rmp.Right = 1;
+
                 if (IsBetween(rect.Top, mouseLocation.Y))
                 {
+                    rmp.Top = 1;
                     return Cursors.SizeNESW;
                 }
                 else if (IsBetween(rect.Bottom, mouseLocation.Y))
                 {
+                    rmp.Bottom = 1;
                     return Cursors.SizeNWSE;
                 }
                 else
@@ -37,8 +47,14 @@ namespace Train
                     return Cursors.SizeWE;
                 }
             }
-            else if (IsBetween(rect.Top, mouseLocation.Y) || IsBetween(rect.Bottom, mouseLocation.Y))
+            else if (IsBetween(rect.Top, mouseLocation.Y))
             {
+                rmp.Top = 1;
+                return Cursors.SizeNS;
+            }
+            else if (IsBetween(rect.Bottom, mouseLocation.Y))
+            {
+                rmp.Bottom = 1;
                 return Cursors.SizeNS;
             }
 

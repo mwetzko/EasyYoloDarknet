@@ -41,16 +41,24 @@ namespace Train
             return rect;
         }
 
-        public static Rectangle GetRectangle(this ImageMark im, Rectangle imageRect)
+        public static LTRB ToLTRB(this RectangleF rect)
         {
-            Rectangle rect = new Rectangle();
+            return new LTRB() { Left = rect.Left, Top = rect.Top, Right = rect.Right, Bottom = rect.Bottom };
+        }
 
-            rect.Width = (int)(imageRect.Width * im.Width);
-            rect.Height = (int)(imageRect.Height * im.Height);
-            rect.X = imageRect.X + (int)((imageRect.Width * im.CenterX) - (rect.Width / 2f));
-            rect.Y = imageRect.Y + (int)((imageRect.Height * im.CenterY) - (rect.Height / 2f));
+        public static RectangleF ToRectangleF(this LTRB rect)
+        {
+            return RectangleF.FromLTRB(rect.Left, rect.Top, rect.Right, rect.Bottom);
+        }
 
-            return rect;
+        public static void Update(this ImageMark im, RectangleF relativeRect)
+        {
+            im.CenterX = relativeRect.X;
+            im.CenterY = relativeRect.Y;
+            im.Width = Math.Abs(relativeRect.Width);
+            im.Height = Math.Abs(relativeRect.Height);
+
+            im.Control?.UpdateState();
         }
     }
 }

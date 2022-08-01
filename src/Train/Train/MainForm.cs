@@ -644,5 +644,10 @@ namespace Train
                 h.ShowDialog();
             }
         }
+
+        void imageEditor_ResizeMarks(object sender, EventArgs e)
+        {
+            EnsureUnsavedInfo();
+        }
     }
 }
