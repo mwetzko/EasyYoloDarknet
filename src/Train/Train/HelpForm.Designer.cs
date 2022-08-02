@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.lbLmbDrag = new System.Windows.Forms.Label();
             this.lbLmbDragText = new System.Windows.Forms.Label();
             this.lbImageEditor = new System.Windows.Forms.Label();
@@ -42,42 +42,42 @@
             this.lbMmDelText = new System.Windows.Forms.Label();
             this.lbMmCtrl = new System.Windows.Forms.Label();
             this.lbMmCtrlText = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1.SuspendLayout();
+            this.tableLayout.SuspendLayout();
             this.SuspendLayout();
             // 
-            // tableLayoutPanel1
+            // tableLayout
             // 
-            this.tableLayoutPanel1.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Controls.Add(this.lbLmbDrag, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lbLmbDragText, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.lbImageEditor, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lbRmbDrag, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.lbRmbDragText, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.lbMwScroll, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.lbLmbDragEsc, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lbLmbDragEscText, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.lbMmDel, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.lbMwText, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.lbMmDelText, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.lbMmCtrl, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.lbMmCtrlText, 1, 6);
-            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 8;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(447, 335);
-            this.tableLayoutPanel1.TabIndex = 0;
+            this.tableLayout.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayout.ColumnCount = 2;
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.tableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout.Controls.Add(this.lbLmbDrag, 0, 1);
+            this.tableLayout.Controls.Add(this.lbLmbDragText, 1, 1);
+            this.tableLayout.Controls.Add(this.lbImageEditor, 0, 0);
+            this.tableLayout.Controls.Add(this.lbRmbDrag, 0, 3);
+            this.tableLayout.Controls.Add(this.lbRmbDragText, 1, 3);
+            this.tableLayout.Controls.Add(this.lbMwScroll, 0, 4);
+            this.tableLayout.Controls.Add(this.lbLmbDragEsc, 0, 2);
+            this.tableLayout.Controls.Add(this.lbLmbDragEscText, 1, 2);
+            this.tableLayout.Controls.Add(this.lbMmDel, 0, 5);
+            this.tableLayout.Controls.Add(this.lbMwText, 1, 4);
+            this.tableLayout.Controls.Add(this.lbMmDelText, 1, 5);
+            this.tableLayout.Controls.Add(this.lbMmCtrl, 0, 6);
+            this.tableLayout.Controls.Add(this.lbMmCtrlText, 1, 6);
+            this.tableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayout.Location = new System.Drawing.Point(0, 0);
+            this.tableLayout.Name = "tableLayout";
+            this.tableLayout.RowCount = 8;
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayout.Size = new System.Drawing.Size(447, 335);
+            this.tableLayout.TabIndex = 0;
             // 
             // lbLmbDrag
             // 
@@ -215,7 +215,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(447, 335);
-            this.Controls.Add(this.tableLayoutPanel1);
+            this.Controls.Add(this.tableLayout);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
@@ -223,15 +223,15 @@
             this.Name = "HelpForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Train Help";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
+            this.tableLayout.ResumeLayout(false);
+            this.tableLayout.PerformLayout();
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.TableLayoutPanel tableLayout;
         private System.Windows.Forms.Label lbLmbDrag;
         private System.Windows.Forms.Label lbLmbDragText;
         private System.Windows.Forms.Label lbImageEditor;
