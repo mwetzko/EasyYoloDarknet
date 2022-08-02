@@ -40,6 +40,8 @@
             this.lbMmDel = new System.Windows.Forms.Label();
             this.lbMwText = new System.Windows.Forms.Label();
             this.lbMmDelText = new System.Windows.Forms.Label();
+            this.lbMmCtrl = new System.Windows.Forms.Label();
+            this.lbMmCtrlText = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,10 +62,13 @@
             this.tableLayoutPanel1.Controls.Add(this.lbMmDel, 0, 5);
             this.tableLayoutPanel1.Controls.Add(this.lbMwText, 1, 4);
             this.tableLayoutPanel1.Controls.Add(this.lbMmDelText, 1, 5);
+            this.tableLayoutPanel1.Controls.Add(this.lbMmCtrl, 0, 6);
+            this.tableLayoutPanel1.Controls.Add(this.lbMmCtrlText, 1, 6);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 7;
+            this.tableLayoutPanel1.RowCount = 8;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -87,7 +92,7 @@
             // lbLmbDragText
             // 
             this.lbLmbDragText.AutoSize = true;
-            this.lbLmbDragText.Location = new System.Drawing.Point(187, 32);
+            this.lbLmbDragText.Location = new System.Drawing.Point(226, 32);
             this.lbLmbDragText.Margin = new System.Windows.Forms.Padding(5);
             this.lbLmbDragText.Name = "lbLmbDragText";
             this.lbLmbDragText.Size = new System.Drawing.Size(107, 15);
@@ -118,7 +123,7 @@
             // lbRmbDragText
             // 
             this.lbRmbDragText.AutoSize = true;
-            this.lbRmbDragText.Location = new System.Drawing.Point(187, 84);
+            this.lbRmbDragText.Location = new System.Drawing.Point(226, 84);
             this.lbRmbDragText.Margin = new System.Windows.Forms.Padding(5);
             this.lbRmbDragText.Name = "lbRmbDragText";
             this.lbRmbDragText.Size = new System.Drawing.Size(73, 15);
@@ -141,14 +146,14 @@
             this.lbLmbDragEsc.Location = new System.Drawing.Point(6, 58);
             this.lbLmbDragEsc.Margin = new System.Windows.Forms.Padding(5);
             this.lbLmbDragEsc.Name = "lbLmbDragEsc";
-            this.lbLmbDragEsc.Size = new System.Drawing.Size(170, 15);
+            this.lbLmbDragEsc.Size = new System.Drawing.Size(24, 15);
             this.lbLmbDragEsc.TabIndex = 9;
-            this.lbLmbDragEsc.Text = "Left Mouse Down + Drag + Esc";
+            this.lbLmbDragEsc.Text = "Esc";
             // 
             // lbLmbDragEscText
             // 
             this.lbLmbDragEscText.AutoSize = true;
-            this.lbLmbDragEscText.Location = new System.Drawing.Point(187, 58);
+            this.lbLmbDragEscText.Location = new System.Drawing.Point(226, 58);
             this.lbLmbDragEscText.Margin = new System.Windows.Forms.Padding(5);
             this.lbLmbDragEscText.Name = "lbLmbDragEscText";
             this.lbLmbDragEscText.Size = new System.Drawing.Size(157, 15);
@@ -168,7 +173,7 @@
             // lbMwText
             // 
             this.lbMwText.AutoSize = true;
-            this.lbMwText.Location = new System.Drawing.Point(187, 110);
+            this.lbMwText.Location = new System.Drawing.Point(226, 110);
             this.lbMwText.Margin = new System.Windows.Forms.Padding(5);
             this.lbMwText.Name = "lbMwText";
             this.lbMwText.Size = new System.Drawing.Size(111, 15);
@@ -178,12 +183,32 @@
             // lbMmDelText
             // 
             this.lbMmDelText.AutoSize = true;
-            this.lbMmDelText.Location = new System.Drawing.Point(187, 136);
+            this.lbMmDelText.Location = new System.Drawing.Point(226, 136);
             this.lbMmDelText.Margin = new System.Windows.Forms.Padding(5);
             this.lbMmDelText.Name = "lbMmDelText";
             this.lbMmDelText.Size = new System.Drawing.Size(70, 15);
             this.lbMmDelText.TabIndex = 8;
             this.lbMmDelText.Text = "Delete Mark";
+            // 
+            // lbMmCtrl
+            // 
+            this.lbMmCtrl.AutoSize = true;
+            this.lbMmCtrl.Location = new System.Drawing.Point(6, 162);
+            this.lbMmCtrl.Margin = new System.Windows.Forms.Padding(5);
+            this.lbMmCtrl.Name = "lbMmCtrl";
+            this.lbMmCtrl.Size = new System.Drawing.Size(209, 15);
+            this.lbMmCtrl.TabIndex = 11;
+            this.lbMmCtrl.Text = "[Hold] Ctrl + Mouse Over Mark Border";
+            // 
+            // lbMmCtrlText
+            // 
+            this.lbMmCtrlText.AutoSize = true;
+            this.lbMmCtrlText.Location = new System.Drawing.Point(226, 162);
+            this.lbMmCtrlText.Margin = new System.Windows.Forms.Padding(5);
+            this.lbMmCtrlText.Name = "lbMmCtrlText";
+            this.lbMmCtrlText.Size = new System.Drawing.Size(105, 15);
+            this.lbMmCtrlText.TabIndex = 12;
+            this.lbMmCtrlText.Text = "Resize Image Mark";
             // 
             // HelpForm
             // 
@@ -218,5 +243,7 @@
         private System.Windows.Forms.Label lbMmDelText;
         private System.Windows.Forms.Label lbLmbDragEsc;
         private System.Windows.Forms.Label lbLmbDragEscText;
+        private System.Windows.Forms.Label lbMmCtrl;
+        private System.Windows.Forms.Label lbMmCtrlText;
     }
 }
