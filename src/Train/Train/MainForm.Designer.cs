@@ -33,6 +33,7 @@ namespace Train
             this.pnlControls = new System.Windows.Forms.Panel();
             this.flowProject = new System.Windows.Forms.FlowLayoutPanel();
             this.lbProjectName = new System.Windows.Forms.Label();
+            this.btnTrain = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.pnlDiffer = new System.Windows.Forms.Panel();
@@ -55,7 +56,6 @@ namespace Train
             this.btnImageFromFile = new System.Windows.Forms.Button();
             this.lbImages = new System.Windows.Forms.Label();
             this.imageEditor = new Train.ImageEditor();
-            this.btnTrain = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.flowProject.SuspendLayout();
             this.pnlProjectLabel.SuspendLayout();
@@ -106,13 +106,24 @@ namespace Train
             this.lbProjectName.TabIndex = 0;
             this.lbProjectName.Text = "<>";
             // 
+            // btnTrain
+            // 
+            this.btnTrain.Location = new System.Drawing.Point(43, 6);
+            this.btnTrain.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
+            this.btnTrain.Name = "btnTrain";
+            this.btnTrain.Size = new System.Drawing.Size(75, 23);
+            this.btnTrain.TabIndex = 1;
+            this.btnTrain.Text = "Train";
+            this.btnTrain.UseVisualStyleBackColor = true;
+            this.btnTrain.Click += new System.EventHandler(this.btnTrain_Click);
+            // 
             // btnSave
             // 
             this.btnSave.Location = new System.Drawing.Point(128, 6);
             this.btnSave.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
-            this.btnSave.TabIndex = 3;
+            this.btnSave.TabIndex = 2;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -123,7 +134,7 @@ namespace Train
             this.btnClose.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
-            this.btnClose.TabIndex = 5;
+            this.btnClose.TabIndex = 3;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
@@ -143,7 +154,7 @@ namespace Train
             this.btnProjectOpen.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnProjectOpen.Name = "btnProjectOpen";
             this.btnProjectOpen.Size = new System.Drawing.Size(75, 23);
-            this.btnProjectOpen.TabIndex = 1;
+            this.btnProjectOpen.TabIndex = 5;
             this.btnProjectOpen.Text = "Open";
             this.btnProjectOpen.UseVisualStyleBackColor = true;
             this.btnProjectOpen.Click += new System.EventHandler(this.btnProjectOpen_Click);
@@ -154,7 +165,7 @@ namespace Train
             this.btnProjectCreate.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnProjectCreate.Name = "btnProjectCreate";
             this.btnProjectCreate.Size = new System.Drawing.Size(75, 23);
-            this.btnProjectCreate.TabIndex = 2;
+            this.btnProjectCreate.TabIndex = 6;
             this.btnProjectCreate.Text = "Create";
             this.btnProjectCreate.UseVisualStyleBackColor = true;
             this.btnProjectCreate.Click += new System.EventHandler(this.btnProjectCreate_Click);
@@ -354,17 +365,6 @@ namespace Train
             this.imageEditor.GetImageClassName += new System.EventHandler<Train.GetImageClassNameArgs>(this.imageEditor_GetImageClassName);
             this.imageEditor.DeleteMarks += new System.EventHandler(this.imageEditor_DeleteMarks);
             this.imageEditor.ResizeMarks += new System.EventHandler(this.imageEditor_ResizeMarks);
-            // 
-            // btnTrain
-            // 
-            this.btnTrain.Location = new System.Drawing.Point(43, 6);
-            this.btnTrain.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
-            this.btnTrain.Name = "btnTrain";
-            this.btnTrain.Size = new System.Drawing.Size(75, 23);
-            this.btnTrain.TabIndex = 6;
-            this.btnTrain.Text = "Train";
-            this.btnTrain.UseVisualStyleBackColor = true;
-            this.btnTrain.Click += new System.EventHandler(this.btnTrain_Click);
             // 
             // MainForm
             // 
