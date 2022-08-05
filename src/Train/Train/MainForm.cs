@@ -24,6 +24,7 @@ namespace Train
 
             EnsureDefaultProjectNameText();
 
+            btnTrain.Visible = false;
             btnSave.Visible = false;
             btnClose.Visible = false;
             pnlDiffer.Visible = false;
@@ -126,6 +127,7 @@ namespace Train
                 }
             }
 
+            btnTrain.Visible = true;
             btnSave.Visible = true;
             btnSave.Enabled = false;
             btnClose.Visible = true;
@@ -185,6 +187,7 @@ namespace Train
             pnlImagesList.Controls.Clear();
             pnlClassesList.Controls.Clear();
 
+            btnTrain.Visible = false;
             btnSave.Visible = false;
             btnClose.Visible = false;
             pnlDiffer.Visible = false;
@@ -648,6 +651,33 @@ namespace Train
         void imageEditor_ResizeMarks(object sender, EventArgs e)
         {
             EnsureUnsavedInfo();
+        }
+
+        void btnTrain_Click(object sender, EventArgs e)
+        {
+            Helper.EnsureYoloTrainPath();
+
+            if (!Helper.EnsurePreTrainedWeights(out string filename))
+            {
+                if (!(MessageBox.Show($"The pre-trained weights file 'yolov4.conv.137' is required and will be downloaded from: {Helper.PRE_TRAINED_WEIGHTS_URL}", FORM_NAME, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK))
+                {
+                    return;
+                }
+
+                using (var downloadForm = new DownloadForm(filename, Helper.PRE_TRAINED_WEIGHTS_URL))
+                {
+                    if (downloadForm.ShowDialog() == DialogResult.Cancel)
+                    {
+                        return;
+                    }
+                }
+
+                if (!Helper.EnsurePreTrainedWeights(out filename))
+                {
+                    MessageBox.Show("Failed to download necessary file(s)!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
         }
     }
 }

@@ -55,6 +55,7 @@ namespace Train
             this.btnImageFromFile = new System.Windows.Forms.Button();
             this.lbImages = new System.Windows.Forms.Label();
             this.imageEditor = new Train.ImageEditor();
+            this.btnTrain = new System.Windows.Forms.Button();
             this.pnlControls.SuspendLayout();
             this.flowProject.SuspendLayout();
             this.pnlProjectLabel.SuspendLayout();
@@ -82,6 +83,7 @@ namespace Train
             // 
             this.flowProject.AutoSize = true;
             this.flowProject.Controls.Add(this.lbProjectName);
+            this.flowProject.Controls.Add(this.btnTrain);
             this.flowProject.Controls.Add(this.btnSave);
             this.flowProject.Controls.Add(this.btnClose);
             this.flowProject.Controls.Add(this.pnlDiffer);
@@ -106,7 +108,7 @@ namespace Train
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(43, 6);
+            this.btnSave.Location = new System.Drawing.Point(128, 6);
             this.btnSave.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
@@ -117,7 +119,7 @@ namespace Train
             // 
             // btnClose
             // 
-            this.btnClose.Location = new System.Drawing.Point(128, 6);
+            this.btnClose.Location = new System.Drawing.Point(213, 6);
             this.btnClose.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(75, 23);
@@ -129,7 +131,7 @@ namespace Train
             // pnlDiffer
             // 
             this.pnlDiffer.BackColor = System.Drawing.Color.Gray;
-            this.pnlDiffer.Location = new System.Drawing.Point(213, 6);
+            this.pnlDiffer.Location = new System.Drawing.Point(298, 6);
             this.pnlDiffer.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.pnlDiffer.Name = "pnlDiffer";
             this.pnlDiffer.Size = new System.Drawing.Size(1, 23);
@@ -137,7 +139,7 @@ namespace Train
             // 
             // btnProjectOpen
             // 
-            this.btnProjectOpen.Location = new System.Drawing.Point(224, 6);
+            this.btnProjectOpen.Location = new System.Drawing.Point(309, 6);
             this.btnProjectOpen.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnProjectOpen.Name = "btnProjectOpen";
             this.btnProjectOpen.Size = new System.Drawing.Size(75, 23);
@@ -148,7 +150,7 @@ namespace Train
             // 
             // btnProjectCreate
             // 
-            this.btnProjectCreate.Location = new System.Drawing.Point(309, 6);
+            this.btnProjectCreate.Location = new System.Drawing.Point(394, 6);
             this.btnProjectCreate.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
             this.btnProjectCreate.Name = "btnProjectCreate";
             this.btnProjectCreate.Size = new System.Drawing.Size(75, 23);
@@ -353,6 +355,17 @@ namespace Train
             this.imageEditor.DeleteMarks += new System.EventHandler(this.imageEditor_DeleteMarks);
             this.imageEditor.ResizeMarks += new System.EventHandler(this.imageEditor_ResizeMarks);
             // 
+            // btnTrain
+            // 
+            this.btnTrain.Location = new System.Drawing.Point(43, 6);
+            this.btnTrain.Margin = new System.Windows.Forms.Padding(5, 1, 5, 1);
+            this.btnTrain.Name = "btnTrain";
+            this.btnTrain.Size = new System.Drawing.Size(75, 23);
+            this.btnTrain.TabIndex = 6;
+            this.btnTrain.Text = "Train";
+            this.btnTrain.UseVisualStyleBackColor = true;
+            this.btnTrain.Click += new System.EventHandler(this.btnTrain_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -414,5 +427,6 @@ namespace Train
         private Button btnImageFromClipboard;
         private TableLayoutPanel tblAddImage;
         private ImageEditor imageEditor;
+        private Button btnTrain;
     }
 }

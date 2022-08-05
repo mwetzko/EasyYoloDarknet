@@ -12,4 +12,12 @@
 	  <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="YoloTrain\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="..\..\..\darknet\cfg\yolov4-custom.cfg" Link="YoloTrain\yolov4-custom.cfg" />
+	</ItemGroup>
+
 </Project>
