@@ -131,7 +131,7 @@ namespace Train
 
         void CalcRelativeImagePos(Size formerImageSize)
         {
-            if (mImageRect.Contains(mLastMouseEvent.Location))
+            if (mLastMouseEvent != null && mImageRect.Contains(mLastMouseEvent.Location))
             {
                 mImageRect.X = mLastMouseEvent.X - (int)(((mLastMouseEvent.X - mImageRect.X) / (float)formerImageSize.Width) * mImageRect.Width);
                 mImageRect.Y = mLastMouseEvent.Y - (int)(((mLastMouseEvent.Y - mImageRect.Y) / (float)formerImageSize.Height) * mImageRect.Height);
