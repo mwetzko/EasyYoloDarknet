@@ -17,7 +17,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Include="..\..\..\darknet\cfg\yolov4-custom.cfg" Link="YoloTrain\yolov4-custom.cfg" />
+	  <None Include="..\..\..\darknet\cfg\yolov4-custom.cfg" Link="YoloTrain\yolov4-custom.cfg">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>

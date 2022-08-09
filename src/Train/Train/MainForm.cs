@@ -655,7 +655,23 @@ namespace Train
 
         void btnTrain_Click(object sender, EventArgs e)
         {
-            Helper.EnsureYoloTrainPath();
+            var numimages = mCurrentProject.Images?.Length ?? 0;
+
+            if (numimages == 0)
+            {
+                MessageBox.Show("You need at least 1 image to train!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var numclasses = mCurrentProject.Classes?.Length ?? 0;
+
+            if (numclasses == 0)
+            {
+                MessageBox.Show("You need at least 1 class to train!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string path = Helper.EnsureProjectTrainPath(mCurrentProjectFile);
 
             if (!Helper.EnsurePreTrainedWeights(out string filename))
             {
@@ -674,10 +690,20 @@ namespace Train
 
                 if (!Helper.EnsurePreTrainedWeights(out filename))
                 {
-                    MessageBox.Show("Failed to download necessary file(s)!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Failed to download necessary file(s)!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
+
+            if (!Helper.EnsureYoloConfig(path, numimages, numclasses))
+            {
+                MessageBox.Show("Config file not found!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            Helper.EnsureObjectNames(path, mCurrentProject.Classes);
+
+
         }
     }
 }

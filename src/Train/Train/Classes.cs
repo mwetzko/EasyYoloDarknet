@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Train
 {
@@ -44,5 +46,27 @@ namespace Train
         public float Top;
         public float Right;
         public float Bottom;
+    }
+
+    class UpdatableConfigValue
+    {
+        string[] mArray;
+        int mIndex;
+        Match mMatch;
+        Lazy<string> mCommand;
+
+        public UpdatableConfigValue(string[] array, int index)
+        {
+            mArray = array;
+            mIndex = index;
+            mMatch = Regex.Match(array[index], "^[\t ]*([a-z_-]+)[\t ]*=([^\r\n]*)");
+            mCommand = new Lazy<string>(() => mMatch.Groups[1].Value.ToLowerInvariant(), true);
+        }
+
+        public bool Success => mMatch.Success;
+
+        public string Command => mCommand.Value;
+
+        public string Value { get => mMatch.Groups[2].Value; set => mArray[mIndex] = $"{mMatch.Groups[1].Value}={value}"; }
     }
 }
