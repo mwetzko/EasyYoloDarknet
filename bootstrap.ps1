@@ -2,7 +2,9 @@ param(
 	[Parameter(Mandatory = $false)]
 	[switch] $cuda,
 	[Parameter(Mandatory = $false)]
-	[switch] $cudnn
+	[switch] $cudnn,
+	[Parameter(Mandatory = $false)]
+	[switch] $dbg
 )
 
 $ErrorActionPreference = "Stop"
@@ -34,14 +36,16 @@ if (!(Test-Path ".\vcpkg\vcpkg.exe")) {
 	
 	$arch = $_
 
-	@(@("stb:$($arch)-windows", "stb_image.h"), 
+	@(
+		@("detours:$($arch)-windows", "detours\detours.h"), 
+		@("stb:$($arch)-windows", "stb_image.h"), 
 		@("pthread:$($arch)-windows", "pthread.h"), 
 		@("opencv[world]:$($arch)-windows", "opencv2\opencv.hpp")) | ForEach-Object {
-	
+
 		$pack = $_[0]
 		$header = $_[1]
 
-		if (!(Test-Path (Join-Path ".\vcpkg\installed\$($arch)-windows\include" $header))) {
+		if (!(Test-Path (Join-Path -Path ".\vcpkg\installed\$($arch)-windows\include" -ChildPath $header))) {
 			Write-Information "Installing $($pack)..."
 			& ".\vcpkg\vcpkg.exe" install $pack
 		}
@@ -56,7 +60,7 @@ if (!(Test-Path ".\darknet\src")) {
 }
 
 if (!(Test-Path ".\data\")) {
-	$null = New-Item (Join-Path (Get-Location) "data") -ItemType "directory"
+	$null = New-Item (Join-Path -Path (Get-Location) -ChildPath "data") -ItemType "directory"
 }
 
 if (!(Test-Path ".\data\yolov4.weights")) {
@@ -71,18 +75,18 @@ if (!(Test-Path ".\data\yolov4.weights")) {
 	}
 }
 
-if (!(Test-Path ".\tools\EnumDependencies\EnumDependencies\bin\EnumDependencies.exe")) {	
+if (!(Test-Path ".\tools\EnumDependencies\EnumDependencies\bin\EnumDependencies.exe")) {
 	$path = ".\tools\EnumDependencies"
-	
+
 	if (Test-Path $path) {
 		Remove-Item $path -Recurse -Force
 	}
-	
+
 	& ".\Tools\GitHubExport.ps1" mwetzko Tools Windows/EnumDependencies (Get-Item -Path ".\tools").FullName
-	
+
 	$output = New-Item ".\tools\EnumDependencies\EnumDependencies\bin" -ItemType "directory"
-	
+
 	& "dotnet.exe" publish ".\tools\EnumDependencies\EnumDependencies\EnumDependencies.csproj" -o $output.FullName
 }
 
-@("x86", "x64") | ForEach-Object { & ".\tools\makedarknet.ps1" $_ $cuda $cudnn }
+@("x86", "x64") | ForEach-Object { & ".\tools\makedarknet.ps1" $_ $cuda $cudnn $dbg }
