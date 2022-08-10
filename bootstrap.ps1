@@ -32,14 +32,13 @@ if (!(Test-Path ".\vcpkg\vcpkg.exe")) {
 	& ".\vcpkg\bootstrap-vcpkg.bat"
 }
 
-@("x86", "x64") | ForEach-Object { 
-	
+@("x86", "x64") | ForEach-Object {
+
 	$arch = $_
 
 	@(
-		@("detours:$($arch)-windows", "detours\detours.h"), 
-		@("stb:$($arch)-windows", "stb_image.h"), 
-		@("pthread:$($arch)-windows", "pthread.h"), 
+		@("stb:$($arch)-windows", "stb_image.h"),
+		@("pthread:$($arch)-windows", "pthread.h"),
 		@("opencv[world]:$($arch)-windows", "opencv2\opencv.hpp")) | ForEach-Object {
 
 		$pack = $_[0]

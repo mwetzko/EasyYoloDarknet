@@ -73,7 +73,6 @@ try {
 	$libraries = New-Object System.Collections.ArrayList
 
 	## code files
-	[void]$codefiles.Add((Get-Item -Path "..\src\darknet_dll.cpp").FullName) ## add DllMain to intercept exit commands
 	Get-Item -Path "..\darknet\src\*.c" | ForEach-Object { [void]$codefiles.Add($_.FullName) }
 	Get-Item -Path "..\darknet\src\*.cpp" -Exclude "yolo_console_dll.cpp" | ForEach-Object { [void]$codefiles.Add($_.FullName) }
 
@@ -127,7 +126,7 @@ try {
 			[void]$includes.Add((Join-Path -Path $cudapath.FullName -ChildPath "include"))
 
 			# additional libraries
-			[void]$libraries.Add((Join-Path -Path $cudapath.FullName -ChildPath "lib" -AdditionalChildPath "x64","*.lib"))
+			[void]$libraries.Add((Join-Path -Path $cudapath.FullName -ChildPath "lib" -AdditionalChildPath "x64", "*.lib"))
 
 			# check for cudnn
 			if ($cudnn.IsPresent) {
@@ -157,7 +156,7 @@ try {
 		$defines | ForEach-Object { [void]$defs.Add("-D $($_)") }
 		$includes | ForEach-Object { [void]$incs.AddRange($("-I", $_)) }
 
-		& $nvcc -m64 -odir $path $defs $incs -c $codefiles
+		& $nvcc -m64 -odir $path $defs $incs -c $codefiles -Xcompiler /MT
 
 		if (!$?) {
 			throw "Failed to compile darknet with nvcc."
@@ -190,7 +189,7 @@ try {
 		Push-Location $path
 
 		try {
-			& "cl.exe" /Gd /EHsc $defs /Fedarknet $incs /LD $codefiles $libraries /link $linkerflag
+			& "cl.exe" /Gd /EHsc $defs /Fedarknet /LD /MT $incs $codefiles $libraries /link $linkerflag
 
 			if (!$?) {
 				throw "Compiling darknet $($arch) failed."
@@ -201,6 +200,21 @@ try {
 		}
 	}
 
+	$darknet = (Get-Item -Path "..\src\darknet_exe.cpp").FullName
+
+	Push-Location $path
+
+	try {
+		& "cl.exe" /Gd /EHsc /Fedarknet /MT $darknet "darknet.lib"
+
+		if (!$?) {
+			throw "Compiling darknet $($arch) failed."
+		}
+	}
+	finally {
+		Pop-Location
+	}
+
 	$dll = Join-Path -Path (Get-Item -Path "..").FullName -ChildPath "bin\$($arch)\"
 
 	if (Test-Path $dll) {
@@ -208,6 +222,10 @@ try {
 	}
 
 	$null = New-Item $dll -ItemType "directory"
+
+	$darknet = Join-Path -Path $dll -ChildPath "darknet.exe"
+
+	Move-Item -Path (Join-Path -Path $path -ChildPath "darknet.exe") $darknet
 
 	$darknet = Join-Path -Path $dll -ChildPath "darknet.dll"
 
