@@ -5,3 +5,7 @@ EXPORTS
     detect_image
     detect_mat
     dispose
+    run_detector
+    SetExitBehavior
+    SetStdOutBehavior
+    ResetStdOutBehavior

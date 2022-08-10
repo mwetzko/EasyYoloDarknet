@@ -4,7 +4,9 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
 
 namespace Train
@@ -520,15 +522,15 @@ namespace Train
 
         ImageControl AddImage(Image img)
         {
-            var pd = Path.GetDirectoryName(mCurrentProjectFile);
+            var projPath = Path.GetDirectoryName(mCurrentProjectFile);
 
-            var path = Path.Combine(pd, "Images");
+            var imagesPath = Path.Combine(projPath, "Images");
 
             try
             {
-                if (!Directory.Exists(path))
+                if (!Directory.Exists(imagesPath))
                 {
-                    Directory.CreateDirectory(path);
+                    Directory.CreateDirectory(imagesPath);
                 }
             }
             catch (Exception ex)
@@ -539,11 +541,11 @@ namespace Train
 
             var name = Guid.NewGuid().ToString("N") + ".png";
 
-            path = Path.Combine(path, name);
+            imagesPath = Path.Combine(imagesPath, name);
 
             try
             {
-                img.Save(path, ImageFormat.Png);
+                img.Save(imagesPath, ImageFormat.Png);
             }
             catch (Exception ex)
             {
@@ -551,7 +553,7 @@ namespace Train
                 return null;
             }
 
-            var ic = new ImageControl(path, null);
+            var ic = new ImageControl(imagesPath, null);
             ic.Dock = DockStyle.Top;
             ic.UnsavedChanges += OnUnsavedChanges;
             ic.DeleteImage += OnDeleteImage;
@@ -671,16 +673,18 @@ namespace Train
                 return;
             }
 
-            string path = Helper.EnsureProjectTrainPath(mCurrentProjectFile);
+            string projPath = Path.GetDirectoryName(mCurrentProjectFile);
 
-            if (!Helper.EnsurePreTrainedWeights(out string filename))
+            string dataPath = Helper.EnsureProjectTrainPath(projPath);
+
+            if (!Helper.EnsurePreTrainedWeights(out string convolutionWeights))
             {
                 if (!(MessageBox.Show($"The pre-trained weights file 'yolov4.conv.137' is required and will be downloaded from: {Helper.PRE_TRAINED_WEIGHTS_URL}", FORM_NAME, MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK))
                 {
                     return;
                 }
 
-                using (var downloadForm = new DownloadForm(filename, Helper.PRE_TRAINED_WEIGHTS_URL))
+                using (var downloadForm = new DownloadForm(convolutionWeights, Helper.PRE_TRAINED_WEIGHTS_URL))
                 {
                     if (downloadForm.ShowDialog() == DialogResult.Cancel)
                     {
@@ -688,22 +692,47 @@ namespace Train
                     }
                 }
 
-                if (!Helper.EnsurePreTrainedWeights(out filename))
+                if (!Helper.EnsurePreTrainedWeights(out convolutionWeights))
                 {
                     MessageBox.Show("Failed to download necessary file(s)!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
 
-            if (!Helper.EnsureYoloConfig(path, numimages, numclasses))
+            if (!Helper.EnsureYoloConfig(dataPath, numimages, numclasses, out string configFilename))
             {
                 MessageBox.Show("Config file not found!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            Helper.EnsureObjectNames(path, mCurrentProject.Classes);
+            Helper.EnsureObjectNames(dataPath, mCurrentProject.Classes, out string objDataFilename);
 
+            var imagesPath = Path.Combine(projPath, "Images");
 
+            Helper.EnsureImages(dataPath, imagesPath, mCurrentProject.Classes, mCurrentProject.Images);
+
+            Darknet.SetExitBehavior(true);
+
+            Darknet.SetStdOutBehavior(out var stdOut, out var stdErr);
+
+            using (FileStream fsOut = new FileStream(new SafeFileHandle(stdOut, true), FileAccess.ReadWrite))
+            {
+                using (FileStream fsErr = new FileStream(new SafeFileHandle(stdErr, true), FileAccess.ReadWrite))
+                {
+                    try
+                    {
+                        Darknet.RunDetector(new string[] { "", "detector", "train" });//, objDataFilename, configFilename, convolutionWeights });
+                    }
+                    catch (SEHException)
+                    {
+                        // exit called
+                    }
+                    finally
+                    {
+                        Darknet.ResetStdOutBehavior();
+                    }
+                }
+            }
         }
     }
 }

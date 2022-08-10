@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -73,9 +73,9 @@ namespace Train
             return value >= edge - 4 && value <= edge + 4;
         }
 
-        public static string EnsureProjectTrainPath(string projFilename)
+        public static string EnsureProjectTrainPath(string projPath)
         {
-            string path = Path.Combine(Path.GetDirectoryName(projFilename), "Temp", Process.GetCurrentProcess().Id.ToString());
+            string path = Path.Combine(projPath, "Data");
 
             if (!Directory.Exists(path))
             {
@@ -94,12 +94,13 @@ namespace Train
             return fi.Exists && fi.Length > 0;
         }
 
-        public static bool EnsureYoloConfig(string path, int numimages, int numclasses)
+        public static bool EnsureYoloConfig(string dataPath, int numimages, int numclasses, out string configFilename)
         {
             string source = Path.Combine(Path.GetDirectoryName(typeof(MainForm).Assembly.Location), "YoloTrain", "yolov4-custom.cfg");
 
             if (!File.Exists(source))
             {
+                configFilename = null;
                 return false;
             }
 
@@ -189,28 +190,54 @@ namespace Train
                 }
             }
 
-            File.WriteAllLines(Path.Combine(path, "yolov4-custom.cfg"), content);
+            configFilename = Path.Combine(dataPath, "yolov4-custom.cfg");
+
+            File.WriteAllLines(configFilename, content);
 
             return true;
         }
 
-        public static void EnsureObjectNames(string path, ClassName[] classes)
+        public static void EnsureObjectNames(string dataPath, ClassName[] classes, out string filename)
         {
-            string filename = Path.Combine(path, "obj.names");
+            filename = Path.Combine(dataPath, "obj.names");
 
             File.WriteAllLines(filename, classes.Select(x => x.Name).ToArray());
 
-            filename = Path.Combine(path, "obj.data");
+            filename = Path.Combine(dataPath, "obj.data");
 
             File.WriteAllLines(filename,
                 new string[]
                 {
                     $"classes={classes.Length}",
-                    "train=train.txt",
-                    "valid=valid.txt",
-                    "names=obj.names",
-                    "backup=backup/",
+                    $"train={Path.Combine(dataPath, "train.txt")}",
+                    $"valid={Path.Combine(dataPath, "valid.txt")}",
+                    $"names={filename}",
+                    $"backup={Path.Combine(dataPath, "backup")}",
                 });
+        }
+
+        public static void EnsureImages(string dataPath, string imagesPath, ClassName[] classes, ImageInfo[] images)
+        {
+            List<string> imagesUsed = new List<string>();
+
+            foreach (var item in images)
+            {
+                if (item.Marks != null)
+                {
+                    imagesUsed.Add(Path.Combine(imagesPath, item.Name));
+
+                    List<string> markInfo = new List<string>();
+
+                    foreach (var mark in item.Marks)
+                    {
+                        markInfo.Add($"{Array.IndexOf(classes, mark.ClassName)} {mark.CenterX:0.000000} {mark.CenterY:0.000000} {mark.Width:0.000000} {mark.Height:0.000000}");
+                    }
+
+                    File.WriteAllLines(Path.Combine(imagesPath, Path.GetFileNameWithoutExtension(item.Name) + ".txt"), markInfo.ToArray());
+                }
+            }
+
+            File.WriteAllLines(Path.Combine(dataPath, "train.txt"), imagesUsed.ToArray());
         }
     }
 }
