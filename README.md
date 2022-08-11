@@ -4,14 +4,20 @@ Compile and run [https://github.com/AlexeyAB/darknet](https://github.com/AlexeyA
 
 ## Steps to follow
 
-1. Make sure you have Visual Studio 2019 or newer installed. Community edition, Professional, all will work. Make sure you have installed the C++ and C# workloads with it.
+1. Make sure you have Visual Studio 2022 or newer installed. All editions (community, professional, etc.) will work. Make sure you have installed the C++ and C# (.NET 6) workloads with it.
 2. Make sure you have git installed: [https://git-scm.com/download/win](https://git-scm.com/download/win).
 3. Make sure you have Powershell or Pwsh installed. Powershell is already part of Windows 10 or newer. So most users wont need this step. You can download it here: [https://github.com/PowerShell/PowerShell](https://github.com/PowerShell/PowerShell)
 4. Check out this repository
-5. Run `bootstrap.ps1`. This will compile `darknet.dll` in both x86 and x64 under \bin\x86\ and \bin\x64\
-5.1 If you want to use CUDA/CUDNN, run `bootstrap.ps1 -cuda [-cudnn]`. This will compile the x64 version of darknet with CUDA. x86 is not supported and will fallback to the version as if it was not compiled with the -cuda flag
+5. Run `bootstrap.ps1`. This will compile `darknet.dll` and `darknet.exe` (if you prefer command line) in both x86 and x64 under \bin\x86\ and \bin\x64\
+5.1 If you want to use CUDA/CUDNN, run `bootstrap.ps1 -cuda [[sm_]<Number>] [-cudnn]`, e.g.:  
+`bootstrap.ps1 -cuda` (translates to '*bootstrap.ps1 -cuda sm_52*')  
+`bootstrap.ps1 -cuda sm_35`  
+`bootstrap.ps1 -cuda -cudnn` (translates to '*bootstrap.ps1 -cuda sm_52 -cudnn*')  
+`bootstrap.ps1 -cuda sm_52 -cudnn`  
+`bootstrap.ps1 -cuda 72 -cudnn` (translates to '*bootstrap.ps1 -cuda sm_72 -cudnn*')  
+This will compile the x64 version of darknet with CUDA. x86 is not supported and will fallback to the version as if it was not compiled with the -cuda flag. Select `sm_<Number>` based on your graphics card.  
 5.2 If you compile with -cuda (optionally with -cudnn) please follow the install instructions for CUDA/CUDNN below.
-6. Open `src\Detect\Detect.sln` with Visual Studio and run. You will be ask to choose an image to detect objects on. Try a picture with people or cars on it. The current version of this project builds `darknet.dll` without GPU support, so detection might take minutes.
+6. Open `src\Detect\Detect.sln` with Visual Studio and run. You will be ask to choose an image to detect objects on. Try a picture with people or cars on it. If you have built `darknet.dll` without `-cuda`, detection might take minutes!
 
 ## Important
 
