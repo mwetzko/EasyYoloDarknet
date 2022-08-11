@@ -3,7 +3,7 @@ param(
 	[ValidateSet('x86', 'x64')]
 	[string] $arch,
 	[Parameter(Position = 1)]
-	[switch] $cuda,
+	[string] $cuda,
 	[Parameter(Position = 2)]
 	[switch] $cudnn,
 	[Parameter(Position = 3)]
@@ -16,8 +16,8 @@ $InformationPreference = "Continue"
 Push-Location (Split-Path -Path $MyInvocation.MyCommand.Definition -Parent)
 
 "Arch: $($arch)"
-"Cuda: $($cuda.IsPresent)"
-if ($cuda.IsPresent) {
+if ($cuda) {
+	"Cuda: $($cuda)"
 	"Cudnn: $($cudnn.IsPresent)"
 }
 "Generate Debug Version: $($dbg.IsPresent)"
@@ -76,7 +76,7 @@ try {
 	Get-Item -Path "..\darknet\src\*.c" | ForEach-Object { [void]$codefiles.Add($_.FullName) }
 	Get-Item -Path "..\darknet\src\*.cpp" -Exclude "yolo_console_dll.cpp" | ForEach-Object { [void]$codefiles.Add($_.FullName) }
 
-	if ($cuda.IsPresent -and ($arch -eq "x64")) {
+	if ($cuda -and ($arch -eq "x64")) {
 		Get-Item -Path "..\darknet\src\*.cu" | ForEach-Object { [void]$codefiles.Add($_.FullName) }
 	}
 
@@ -105,7 +105,7 @@ try {
 	[void]$defines.Add("USE_CMAKE_LIBS")
 
 	# check for cuda, only supported with x64
-	if ($cuda.IsPresent) {
+	if ($cuda) {
 
 		if ($arch -eq "x86") {
 			Write-Warning "Darknet and CUDA is only supported on x64. Using non-CUDA darknet code for x86 now..."
@@ -150,13 +150,13 @@ try {
 	$defs = New-Object System.Collections.ArrayList
 	$incs = New-Object System.Collections.ArrayList
 
-	if ($cuda.IsPresent -and ($arch -eq "x64")) {
+	if ($cuda -and ($arch -eq "x64")) {
 		# use nvcc compiler
 
 		$defines | ForEach-Object { [void]$defs.Add("-D $($_)") }
 		$includes | ForEach-Object { [void]$incs.AddRange($("-I", $_)) }
 
-		& $nvcc -m64 -odir $path $defs $incs -c $codefiles -Xcompiler /MT
+		& $nvcc --gpu-architecture=$cuda -m64 -odir $path $defs $incs -c $codefiles -Xcompiler /MT
 
 		if (!$?) {
 			throw "Failed to compile darknet with nvcc."

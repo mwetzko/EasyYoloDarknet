@@ -2,6 +2,8 @@ param(
 	[Parameter(Mandatory = $false)]
 	[switch] $cuda,
 	[Parameter(Mandatory = $false)]
+	[string] $cudaarch,
+	[Parameter(Mandatory = $false)]
 	[switch] $cudnn,
 	[Parameter(Mandatory = $false)]
 	[switch] $dbg
@@ -88,4 +90,24 @@ if (!(Test-Path ".\tools\EnumDependencies\EnumDependencies\bin\EnumDependencies.
 	& "dotnet.exe" publish ".\tools\EnumDependencies\EnumDependencies\EnumDependencies.csproj" -o $output.FullName
 }
 
-@("x86", "x64") | ForEach-Object { & ".\tools\makedarknet.ps1" $_ $cuda $cudnn $dbg }
+if ($cuda.IsPresent) {
+	if ($cudaarch) {
+		if ($cudaarch -notmatch "^sm_[0-9]+$") {
+			if ($cudaarch -notmatch "^[0-9]+$") {
+				Write-Error -Message "$($cudaarch) is not recognized as valid cuda architecture"
+				exit
+			}
+			else {
+				$cudaarch = "sm_$($cudaarch)"
+			}
+		}
+	}
+	else {
+		$cudaarch = "sm_52"
+	}
+}
+else {
+	$cudaarch = $null
+}
+
+@("x86", "x64") | ForEach-Object { & ".\tools\makedarknet.ps1" $_ $cudaarch $cudnn $dbg }
