@@ -143,7 +143,7 @@ namespace Train
                         }
                         else if (line.Command == "subdivisions")
                         {
-                            line.Value = "16";
+                            line.Value = "64";
                         }
                         else if (line.Command == "max_batches" || line.Command == "steps")
                         {

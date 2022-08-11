@@ -1,12 +1,11 @@
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using Microsoft.Win32.SafeHandles;
 using Newtonsoft.Json;
 
 namespace Train
@@ -711,27 +710,33 @@ namespace Train
 
             Helper.EnsureImages(dataPath, imagesPath, mCurrentProject.Classes, mCurrentProject.Images);
 
-            Darknet.SetExitBehavior(true);
+            ProcessStartInfo psi = new ProcessStartInfo();
 
-            Darknet.SetStdOutBehavior(out var stdOut, out var stdErr);
+            psi.CreateNoWindow = true;
 
-            using (FileStream fsOut = new FileStream(new SafeFileHandle(stdOut, true), FileAccess.ReadWrite))
+            if (IntPtr.Size == sizeof(int))
             {
-                using (FileStream fsErr = new FileStream(new SafeFileHandle(stdErr, true), FileAccess.ReadWrite))
-                {
-                    try
-                    {
-                        Darknet.RunDetector(new string[] { "", "detector", "train" });//, objDataFilename, configFilename, convolutionWeights });
-                    }
-                    catch (SEHException)
-                    {
-                        // exit called
-                    }
-                    finally
-                    {
-                        Darknet.ResetStdOutBehavior();
-                    }
-                }
+                psi.FileName = Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "x86", "darknet.exe");
+            }
+            else
+            {
+                psi.FileName = Path.Combine(Path.GetDirectoryName(typeof(Program).Assembly.Location), "x64", "darknet.exe");
+            }
+
+            foreach (var item in new string[] { "detector", "train", objDataFilename, configFilename, convolutionWeights, "-dont_show" })
+            {
+                psi.ArgumentList.Add(item);
+            }
+
+            psi.ArgumentList.Add("nullstdin");
+
+            psi.RedirectStandardInput = false;
+            psi.RedirectStandardOutput = true;
+            psi.RedirectStandardError = true;
+
+            using (var form = new TrainForm(psi))
+            {
+                form.ShowDialog();
             }
         }
     }
