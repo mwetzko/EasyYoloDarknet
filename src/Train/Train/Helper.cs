@@ -94,7 +94,7 @@ namespace Train
             return fi.Exists && fi.Length > 0;
         }
 
-        public static bool EnsureYoloConfig(string dataPath, int numimages, int numclasses, out string configFilename)
+        public static bool EnsureYoloConfig(string dataPath, int numimages, int numclasses, int batch, int subdivisions, int width, int height, out string configFilename)
         {
             string source = Path.Combine(Path.GetDirectoryName(typeof(MainForm).Assembly.Location), "YoloTrain", "yolov4-custom.cfg");
 
@@ -139,11 +139,11 @@ namespace Train
                     {
                         if (line.Command == "batch")
                         {
-                            line.Value = "64";
+                            line.Value = $"{batch}";
                         }
                         else if (line.Command == "subdivisions")
                         {
-                            line.Value = "64";
+                            line.Value = $"{subdivisions}";
                         }
                         else if (line.Command == "max_batches" || line.Command == "steps")
                         {
@@ -168,9 +168,13 @@ namespace Train
                                 line.Value = $"{(int)(num * 0.8)},{(int)(num * 0.9)}";
                             }
                         }
-                        else if (line.Command == "width" || line.Command == "height")
+                        else if (line.Command == "width")
                         {
-                            line.Value = "416";
+                            line.Value = $"{width}";
+                        }
+                        else if (line.Command == "height")
+                        {
+                            line.Value = $"{height}";
                         }
                     }
                     else if (section == "yolo")

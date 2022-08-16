@@ -76,7 +76,7 @@
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayout.Size = new System.Drawing.Size(447, 335);
+            this.tableLayout.Size = new System.Drawing.Size(444, 261);
             this.tableLayout.TabIndex = 0;
             // 
             // lbLmbDrag
@@ -86,7 +86,7 @@
             this.lbLmbDrag.Margin = new System.Windows.Forms.Padding(5);
             this.lbLmbDrag.Name = "lbLmbDrag";
             this.lbLmbDrag.Size = new System.Drawing.Size(139, 15);
-            this.lbLmbDrag.TabIndex = 0;
+            this.lbLmbDrag.TabIndex = 2;
             this.lbLmbDrag.Text = "Left Mouse Down + Drag";
             // 
             // lbLmbDragText
@@ -96,7 +96,7 @@
             this.lbLmbDragText.Margin = new System.Windows.Forms.Padding(5);
             this.lbLmbDragText.Name = "lbLmbDragText";
             this.lbLmbDragText.Size = new System.Drawing.Size(107, 15);
-            this.lbLmbDragText.TabIndex = 1;
+            this.lbLmbDragText.TabIndex = 3;
             this.lbLmbDragText.Text = "Create Image Mark";
             // 
             // lbImageEditor
@@ -107,7 +107,7 @@
             this.lbImageEditor.Margin = new System.Windows.Forms.Padding(5);
             this.lbImageEditor.Name = "lbImageEditor";
             this.lbImageEditor.Size = new System.Drawing.Size(78, 15);
-            this.lbImageEditor.TabIndex = 2;
+            this.lbImageEditor.TabIndex = 1;
             this.lbImageEditor.Text = "Image Editor";
             // 
             // lbRmbDrag
@@ -117,7 +117,7 @@
             this.lbRmbDrag.Margin = new System.Windows.Forms.Padding(5);
             this.lbRmbDrag.Name = "lbRmbDrag";
             this.lbRmbDrag.Size = new System.Drawing.Size(147, 15);
-            this.lbRmbDrag.TabIndex = 3;
+            this.lbRmbDrag.TabIndex = 6;
             this.lbRmbDrag.Text = "Right Mouse Down + Drag";
             // 
             // lbRmbDragText
@@ -127,7 +127,7 @@
             this.lbRmbDragText.Margin = new System.Windows.Forms.Padding(5);
             this.lbRmbDragText.Name = "lbRmbDragText";
             this.lbRmbDragText.Size = new System.Drawing.Size(73, 15);
-            this.lbRmbDragText.TabIndex = 4;
+            this.lbRmbDragText.TabIndex = 7;
             this.lbRmbDragText.Text = "Move Image";
             // 
             // lbMwScroll
@@ -137,7 +137,7 @@
             this.lbMwScroll.Margin = new System.Windows.Forms.Padding(5);
             this.lbMwScroll.Name = "lbMwScroll";
             this.lbMwScroll.Size = new System.Drawing.Size(79, 15);
-            this.lbMwScroll.TabIndex = 5;
+            this.lbMwScroll.TabIndex = 8;
             this.lbMwScroll.Text = "Mouse Wheel";
             // 
             // lbLmbDragEsc
@@ -147,7 +147,7 @@
             this.lbLmbDragEsc.Margin = new System.Windows.Forms.Padding(5);
             this.lbLmbDragEsc.Name = "lbLmbDragEsc";
             this.lbLmbDragEsc.Size = new System.Drawing.Size(24, 15);
-            this.lbLmbDragEsc.TabIndex = 9;
+            this.lbLmbDragEsc.TabIndex = 4;
             this.lbLmbDragEsc.Text = "Esc";
             // 
             // lbLmbDragEscText
@@ -157,7 +157,7 @@
             this.lbLmbDragEscText.Margin = new System.Windows.Forms.Padding(5);
             this.lbLmbDragEscText.Name = "lbLmbDragEscText";
             this.lbLmbDragEscText.Size = new System.Drawing.Size(157, 15);
-            this.lbLmbDragEscText.TabIndex = 10;
+            this.lbLmbDragEscText.TabIndex = 5;
             this.lbLmbDragEscText.Text = "Cancel Image Mark Creation";
             // 
             // lbMmDel
@@ -167,7 +167,7 @@
             this.lbMmDel.Margin = new System.Windows.Forms.Padding(5);
             this.lbMmDel.Name = "lbMmDel";
             this.lbMmDel.Size = new System.Drawing.Size(132, 15);
-            this.lbMmDel.TabIndex = 7;
+            this.lbMmDel.TabIndex = 10;
             this.lbMmDel.Text = "Mouse Over Mark + Del";
             // 
             // lbMwText
@@ -177,7 +177,7 @@
             this.lbMwText.Margin = new System.Windows.Forms.Padding(5);
             this.lbMwText.Name = "lbMwText";
             this.lbMwText.Size = new System.Drawing.Size(111, 15);
-            this.lbMwText.TabIndex = 6;
+            this.lbMwText.TabIndex = 9;
             this.lbMwText.Text = "Zoom Image in/out";
             // 
             // lbMmDelText
@@ -187,7 +187,7 @@
             this.lbMmDelText.Margin = new System.Windows.Forms.Padding(5);
             this.lbMmDelText.Name = "lbMmDelText";
             this.lbMmDelText.Size = new System.Drawing.Size(70, 15);
-            this.lbMmDelText.TabIndex = 8;
+            this.lbMmDelText.TabIndex = 11;
             this.lbMmDelText.Text = "Delete Mark";
             // 
             // lbMmCtrl
@@ -197,7 +197,7 @@
             this.lbMmCtrl.Margin = new System.Windows.Forms.Padding(5);
             this.lbMmCtrl.Name = "lbMmCtrl";
             this.lbMmCtrl.Size = new System.Drawing.Size(209, 15);
-            this.lbMmCtrl.TabIndex = 11;
+            this.lbMmCtrl.TabIndex = 12;
             this.lbMmCtrl.Text = "[Hold] Ctrl + Mouse Over Mark Border";
             // 
             // lbMmCtrlText
@@ -207,14 +207,14 @@
             this.lbMmCtrlText.Margin = new System.Windows.Forms.Padding(5);
             this.lbMmCtrlText.Name = "lbMmCtrlText";
             this.lbMmCtrlText.Size = new System.Drawing.Size(105, 15);
-            this.lbMmCtrlText.TabIndex = 12;
+            this.lbMmCtrlText.TabIndex = 13;
             this.lbMmCtrlText.Text = "Resize Image Mark";
             // 
             // HelpForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(447, 335);
+            this.ClientSize = new System.Drawing.Size(444, 261);
             this.Controls.Add(this.tableLayout);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;

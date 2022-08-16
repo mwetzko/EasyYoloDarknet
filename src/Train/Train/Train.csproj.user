@@ -25,6 +25,9 @@
     <Compile Update="MarkControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Update="NetSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="TrainForm.cs">
       <SubType>Form</SubType>
     </Compile>

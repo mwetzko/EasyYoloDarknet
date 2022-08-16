@@ -698,10 +698,20 @@ namespace Train
                 }
             }
 
-            if (!Helper.EnsureYoloConfig(dataPath, numimages, numclasses, out string configFilename))
+            string configFilename;
+
+            using (var form = new NetSettingsForm())
             {
-                MessageBox.Show("Config file not found!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
+                if (form.ShowDialog() == DialogResult.Cancel)
+                {
+                    return;
+                }
+
+                if (!Helper.EnsureYoloConfig(dataPath, numimages, numclasses, form.Batch, form.Subdivisions, form.NetWidth, form.NetHeight, out configFilename))
+                {
+                    MessageBox.Show("Config file not found!", FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
             }
 
             Helper.EnsureObjectNames(dataPath, mCurrentProject.Classes, out string objDataFilename);
