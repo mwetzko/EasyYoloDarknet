@@ -209,6 +209,13 @@ namespace Train
 
             filename = Path.Combine(dataPath, "obj.data");
 
+            string backup = Path.Combine(dataPath, "backup");
+
+            if (!Directory.Exists(backup))
+            {
+                Directory.CreateDirectory(backup);
+            }
+
             File.WriteAllLines(filename,
                 new string[]
                 {
@@ -216,7 +223,7 @@ namespace Train
                     $"train={Path.Combine(dataPath, "train.txt")}",
                     $"valid={Path.Combine(dataPath, "valid.txt")}",
                     $"names={filename}",
-                    $"backup={Path.Combine(dataPath, "backup")}",
+                    $"backup={backup}",
                 });
         }
 

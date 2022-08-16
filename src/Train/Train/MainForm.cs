@@ -674,7 +674,17 @@ namespace Train
 
             string projPath = Path.GetDirectoryName(mCurrentProjectFile);
 
-            string dataPath = Helper.EnsureProjectTrainPath(projPath);
+            string dataPath;
+
+            try
+            {
+                dataPath = Helper.EnsureProjectTrainPath(projPath);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             if (!Helper.EnsurePreTrainedWeights(out string convolutionWeights))
             {
@@ -714,11 +724,29 @@ namespace Train
                 }
             }
 
-            Helper.EnsureObjectNames(dataPath, mCurrentProject.Classes, out string objDataFilename);
+            string objDataFilename;
+
+            try
+            {
+                Helper.EnsureObjectNames(dataPath, mCurrentProject.Classes, out objDataFilename);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             var imagesPath = Path.Combine(projPath, "Images");
 
-            Helper.EnsureImages(dataPath, imagesPath, mCurrentProject.Classes, mCurrentProject.Images);
+            try
+            {
+                Helper.EnsureImages(dataPath, imagesPath, mCurrentProject.Classes, mCurrentProject.Images);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, FORM_NAME, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             ProcessStartInfo psi = new ProcessStartInfo();
 
