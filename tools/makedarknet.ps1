@@ -15,12 +15,18 @@ $InformationPreference = "Continue"
 
 Push-Location (Split-Path -Path $MyInvocation.MyCommand.Definition -Parent)
 
+""
+"==========================================="
+"==========================================="
 "Arch: $($arch)"
 if ($cuda) {
 	"Cuda: $($cuda)"
 	"Cudnn: $($cudnn.IsPresent)"
 }
 "Generate Debug Version: $($dbg.IsPresent)"
+"==========================================="
+"==========================================="
+""
 
 if ($dbg.IsPresent) {
 	$linkerflag = "/DEBUG"
@@ -142,7 +148,7 @@ try {
 				[void]$includes.Add((Join-Path -Path $cudnnpath.FullName -ChildPath "include"))
 
 				# additional cudnn libs
-				[void]$libraries.Add((Join-Path -Path $cudnnpath.FullName -ChildPath "lib" -AdditionalChildPath "*.lib"))
+				[void]$libraries.Add((Join-Path -Path $cudnnpath.FullName -ChildPath "lib" -AdditionalChildPath "x64", "*.lib"))
 			}
 		}
 	}
