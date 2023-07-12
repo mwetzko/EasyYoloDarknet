@@ -40,6 +40,8 @@ function My-Do-Dependencies {
 		$deps,
 		$libs,
 		$vcpkgbin,
+		$cudabin,
+		$cudnnbin,
 		$dll
 	)
 
@@ -50,18 +52,28 @@ function My-Do-Dependencies {
 
 				[void]$libs.Add($_)
 
-				$vcpkgdep = Join-Path -Path $vcpkgbin -ChildPath $_
+				$dep = Join-Path -Path $vcpkgbin -ChildPath $_
+				if (!(Test-Path $dep)) {
+					if ($cudabin -and (Test-Path $cudabin)) {
+						$dep = Join-Path -Path $cudabin -ChildPath $_
+						if (!(Test-Path $dep)) {
+							if ($cudnnbin -and (Test-Path $cudnnbin)) {
+								$dep = Join-Path -Path $cudnnbin -ChildPath $_
+							}
+						}
+					}
+				}
 
-				if (Test-Path $vcpkgdep) {
+				if (Test-Path $dep) {
 					Write-Information "Processing dependency $($_)..."
 
 					$item = Join-Path -Path $dll -ChildPath $_
 
-					Copy-Item -Path $vcpkgdep $item
+					Copy-Item -Path $dep $item
 
 					$subs = & ".\EnumDependencies\EnumDependencies\bin\EnumDependencies.exe" $item
 
-					My-Do-Dependencies -deps $subs -libs $libs -vcpkgbin $vcpkgbin -dll $dll
+					My-Do-Dependencies -deps $subs -libs $libs -vcpkgbin $vcpkgbin -cudabin $cudabin -cudnnbin $cudnnbin -dll $dll
 				}
 			}
 		}
@@ -241,7 +253,15 @@ try {
 
 	$libs = New-Object System.Collections.ArrayList
 
-	My-Do-Dependencies -deps $deps -libs $libs -vcpkgbin $vcpkgbin -dll $dll
+	if ($cudapath) {
+		$cudapath = Join-Path -Path $cudapath.FullName -ChildPath "bin"
+	}
+
+	if ($cudnnpath) {
+		$cudnnpath = Join-Path -Path $cudnnpath.FullName -ChildPath "bin"
+	}
+
+	My-Do-Dependencies -deps $deps -libs $libs -vcpkgbin $vcpkgbin -cudabin $cudapath -cudnnbin $cudnnpath -dll $dll
 
 	if ($dbg.IsPresent ) {
 		$pdb = Join-Path -Path $path -ChildPath "darknet.pdb"
